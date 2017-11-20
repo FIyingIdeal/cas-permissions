@@ -1,0 +1,5 @@
+shiro:
+  cas:
+    casServerUrl: www.casserver.com:8443/cas
+    casServerLoginUrl: www.casserver.com:8443/cas/login
+    callbackUrl: www.casserver.com:{server https port}/{projectName}/cas
