@@ -1,5 +1,9 @@
 shiro:
   cas:
-    casServerUrl: www.casserver.com:8443/cas
-    casServerLoginUrl: www.casserver.com:8443/cas/login
-    callbackUrl: www.casserver.com:{server https port}/{projectName}/cas
+    casServerUrlPrefix: https://www.casserver.com:8443/cas
+    casServerLoginUrl: ${shiro.cas.casServerUrlPrefix}/login
+    #casService: https://{domain}:{server https port if https is enable OR http port}/{projectName}/{filter path mapping}
+    casService: https://www.casserver.com:8080/cas?client_name=myApp1
+  #����ShiroFilterFactoryBean��loginUrl������λ��{@link AbstractShiroWebFilterConfiguration#loginUrl}
+  loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.casService}
+  successUrl: /

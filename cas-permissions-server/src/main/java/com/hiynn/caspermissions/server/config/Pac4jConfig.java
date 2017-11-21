@@ -16,27 +16,29 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Pac4jConfig {
 
-    @Value("${casServerUrl}")
-    private String casServerUrl;
+    @Value("${shiro.cas.casServerUrlPrefix}")
+    private String casServerUrlPrefix;
 
     @Value("${shiro.cas.casServerLoginUrl}")
     private String casServerLoginUrl;
 
-    @Value("${shiro.cas.callbackUrl}")
-    private String callbackUrl;
+    @Value("${shiro.cas.casService}")
+    private String casService;
 
     @Bean
     public Config config() {
         CasConfiguration configuration = new CasConfiguration(
-                casServerLoginUrl, casServerUrl);
+                casServerLoginUrl, casServerUrlPrefix);
         CasClient client = new CasClient(configuration);
-        client.setCallbackUrl(callbackUrl);
-        Config config = new Config(client);
+        client.setCallbackUrl(casService);
+        client.setName("myApp1");
+        Config config = new Config(new Clients(client));
         return config;
     }
 
+    //CallbackFilter用来替代shiro-cas中的CasFilter
     @Bean
-    public CallbackFilter getCallbackFilter() {
+    public CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
         callbackFilter.setConfig(config());
         return callbackFilter;
