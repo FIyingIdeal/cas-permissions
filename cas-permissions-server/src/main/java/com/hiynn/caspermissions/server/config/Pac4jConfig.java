@@ -30,13 +30,14 @@ public class Pac4jConfig {
     @Bean
     public Config config() {
         CasConfiguration configuration = new CasConfiguration(
-                casServerLoginUrl, casService);
+                casServerLoginUrl, casServerUrlPrefix);
         CasClient client = new CasClient(configuration);
         client.setCallbackUrl(casService);
         //TODO CasRestFormClient构造方法的第二三个参数是rest请求的用户名和密码的字段
         //CasRestFormClient casRestClient = new CasRestFormClient(configuration, "username", "password");
         //TokenCredentials tokenCredentials = casRestClient.requestServiceTicket();
         Clients clients = new Clients(client);
+        clients.setDefaultClient(client);
         Config config = new Config(clients);
 
         return config;

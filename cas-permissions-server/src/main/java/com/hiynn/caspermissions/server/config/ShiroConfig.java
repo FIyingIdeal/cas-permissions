@@ -54,7 +54,7 @@ public class ShiroConfig {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
         filterChainDefinition.addPathDefinition("/login", "anon");
         filterChainDefinition.addPathDefinition("/hello", "authc");
-        filterChainDefinition.addPathDefinition("/cas", "cas");
+        filterChainDefinition.addPathDefinition("/callback", "cas");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
     }
