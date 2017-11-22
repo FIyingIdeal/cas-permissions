@@ -2,9 +2,11 @@ package com.hiynn.caspermissions.server.config;
 
 import io.buji.pac4j.filter.CallbackFilter;
 import org.pac4j.cas.client.CasClient;
+import org.pac4j.cas.client.rest.CasRestFormClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.credentials.TokenCredentials;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +30,15 @@ public class Pac4jConfig {
     @Bean
     public Config config() {
         CasConfiguration configuration = new CasConfiguration(
-                casServerLoginUrl, casServerUrlPrefix);
+                casServerLoginUrl, casService);
         CasClient client = new CasClient(configuration);
         client.setCallbackUrl(casService);
-        client.setName("myApp1");
-        Config config = new Config(new Clients(client));
+        //TODO CasRestFormClient构造方法的第二三个参数是rest请求的用户名和密码的字段
+        //CasRestFormClient casRestClient = new CasRestFormClient(configuration, "username", "password");
+        //TokenCredentials tokenCredentials = casRestClient.requestServiceTicket();
+        Clients clients = new Clients(client);
+        Config config = new Config(clients);
+
         return config;
     }
 

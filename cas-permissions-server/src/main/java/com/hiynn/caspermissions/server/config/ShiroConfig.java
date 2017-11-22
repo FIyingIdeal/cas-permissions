@@ -4,6 +4,7 @@ import io.buji.pac4j.filter.CallbackFilter;
 import io.buji.pac4j.realm.Pac4jRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.realm.text.TextConfigurationRealm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
@@ -37,6 +38,11 @@ public class ShiroConfig {
     @Autowired
     private CallbackFilter callbackFilter;
 
+    /**
+     * 使用buji-pac4j提供的Pac4jRealm进行身份认证
+     * TODO 权限需要定制化的话要继承Pac4jRealm并重写doGetAuthorizationInfo(PrincipalCollection)方法
+     * @return
+     */
     @Bean
     public Realm pac4jCasRealm() {
         Pac4jRealm realm = new Pac4jRealm();
@@ -46,8 +52,8 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
-        filterChainDefinition.addPathDefinition("/login", "authc");
-        filterChainDefinition.addPathDefinition("/hello", "anon");
+        filterChainDefinition.addPathDefinition("/login", "anon");
+        filterChainDefinition.addPathDefinition("/hello", "authc");
         filterChainDefinition.addPathDefinition("/cas", "cas");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
