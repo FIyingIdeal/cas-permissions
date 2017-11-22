@@ -5,7 +5,7 @@ shiro:
     #casService: https://{domain}:{server https port if https is enable OR http port}/{projectName}/{filter path mapping}
     #?client_name=casclient
     casService: https://www.casserver.com:9443/hiynn-cas/callback
-  #����ShiroFilterFactoryBean��loginUrl������λ��{@link AbstractShiroWebFilterConfiguration#loginUrl}
+  #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.casService}
   successUrl: /
 
