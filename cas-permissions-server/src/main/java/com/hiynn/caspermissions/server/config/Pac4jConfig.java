@@ -27,27 +27,23 @@ public class Pac4jConfig {
     @Value("${shiro.cas.casService}")
     private String casService;
 
+    @Value("${shiro.cas.casClientName}")
+    private String casClientName;
+
     @Bean
     public Config config() {
         CasConfiguration configuration = new CasConfiguration(
                 casServerLoginUrl, casServerUrlPrefix);
+        configuration.setAcceptAnyProxy(true);
         CasClient client = new CasClient(configuration);
-        client.setCallbackUrl(casService);
-        //TODO CasRestFormClient构造方法的第二三个参数是rest请求的用户名和密码的字段
-        //CasRestFormClient casRestClient = new CasRestFormClient(configuration, "username", "password");
-        //TokenCredentials tokenCredentials = casRestClient.requestServiceTicket();
-        Clients clients = new Clients(client);
-        clients.setDefaultClient(client);
+        String callbackUrl = casService + "?client_name=" + casClientName;
+        client.setCallbackUrl(callbackUrl);
+        client.setName(casClientName);
+        Clients clients = new Clients(callbackUrl, client);
+        //clients.setDefaultClient(client);
         Config config = new Config(clients);
 
         return config;
     }
 
-    //CallbackFilter用来替代shiro-cas中的CasFilter
-    @Bean
-    public CallbackFilter callbackFilter() {
-        CallbackFilter callbackFilter = new CallbackFilter();
-        callbackFilter.setConfig(config());
-        return callbackFilter;
-    }
 }

@@ -2,13 +2,17 @@ package com.hiynn.caspermissions.server.config;
 
 import io.buji.pac4j.filter.CallbackFilter;
 import io.buji.pac4j.realm.Pac4jRealm;
+import io.buji.pac4j.subject.Pac4jSubjectFactory;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.SessionsSecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.realm.text.TextConfigurationRealm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.pac4j.core.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,9 +30,6 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-    @Autowired
-    protected SecurityManager securityManager;
-
     @Value("${shiro.loginUrl}")
     protected String loginUrl;
 
@@ -36,7 +37,10 @@ public class ShiroConfig {
     protected String successUrl;
 
     @Autowired
-    private CallbackFilter callbackFilter;
+    private SecurityManager securityManager;
+
+    @Autowired
+    private Config config;
 
     /**
      * 使用buji-pac4j提供的Pac4jRealm进行身份认证
@@ -47,6 +51,19 @@ public class ShiroConfig {
     public Realm pac4jCasRealm() {
         Pac4jRealm realm = new Pac4jRealm();
         return realm;
+    }
+
+    //CallbackFilter用来替代shiro-cas中的CasFilter
+    @Bean
+    public CallbackFilter callbackFilter() {
+        CallbackFilter callbackFilter = new CallbackFilter();
+        callbackFilter.setConfig(config);
+        return callbackFilter;
+    }
+
+    @Bean(name = "subjectFactory")
+    public Pac4jSubjectFactory subjectFactory() {
+        return new Pac4jSubjectFactory();
     }
 
     @Bean
@@ -79,7 +96,7 @@ public class ShiroConfig {
 
         //注册自定义的Filter
         Map<String, Filter> shiroFilter = new LinkedHashMap<>();
-        shiroFilter.put("cas", callbackFilter);
+        shiroFilter.put("cas", callbackFilter());
         filterFactoryBean.setFilters(shiroFilter);
 
         /**
