@@ -4,14 +4,11 @@ import io.buji.pac4j.filter.CallbackFilter;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.mgt.SessionsSecurityManager;
 import org.apache.shiro.realm.Realm;
-import org.apache.shiro.realm.text.TextConfigurationRealm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.pac4j.core.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +45,7 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public Realm pac4jCasRealm() {
+    public Realm pac4jRealm() {
         Pac4jRealm realm = new Pac4jRealm();
         return realm;
     }
@@ -58,6 +55,7 @@ public class ShiroConfig {
     public CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
         callbackFilter.setConfig(config);
+        callbackFilter.setMultiProfile(true);
         return callbackFilter;
     }
 
@@ -65,6 +63,14 @@ public class ShiroConfig {
     public Pac4jSubjectFactory subjectFactory() {
         return new Pac4jSubjectFactory();
     }
+
+    /*@Bean(name = "securityManager")
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(pac4jRealm());
+        securityManager.setSubjectFactory(subjectFactory());
+        return securityManager;
+    }*/
 
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {

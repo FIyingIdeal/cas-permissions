@@ -1,4 +1,4 @@
-package com.hiynn.caspermissions.server.realms;
+package com.hiynn.caspermissions.server.shiro.realms;
 
 //import io.buji.pac4j.realm.Pac4jRealm;
 

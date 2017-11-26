@@ -1,12 +1,10 @@
 package com.hiynn.caspermissions.server.config;
 
-import io.buji.pac4j.filter.CallbackFilter;
+import com.hiynn.caspermissions.server.shiro.ShiroCasLogoutHandler;
 import org.pac4j.cas.client.CasClient;
-import org.pac4j.cas.client.rest.CasRestFormClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.credentials.TokenCredentials;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +28,7 @@ public class Pac4jConfig {
     @Value("${shiro.cas.casClientName}")
     private String casClientName;
 
-    @Bean
+    /*@Bean
     public Config config() {
         CasConfiguration configuration = new CasConfiguration(
                 casServerLoginUrl, casServerUrlPrefix);
@@ -43,6 +41,22 @@ public class Pac4jConfig {
         //clients.setDefaultClient(client);
         Config config = new Config(clients);
 
+        return config;
+    }*/
+
+    @Bean
+    public Config config() {
+        ShiroCasLogoutHandler casLogoutHandler = new ShiroCasLogoutHandler();
+        CasConfiguration casConfig = new CasConfiguration();
+        casConfig.setLoginUrl(casServerLoginUrl);
+        casConfig.setLogoutHandler(casLogoutHandler);
+        CasClient casClient = new CasClient();
+        casClient.setConfiguration(casConfig);
+        Clients clients = new Clients();
+        clients.setCallbackUrl(casService);
+        clients.setClients(casClient);
+        clients.setDefaultClient(casClient);
+        Config config = new Config(clients);
         return config;
     }
 
