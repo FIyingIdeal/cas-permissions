@@ -22,8 +22,8 @@ public class Pac4jConfig {
     @Value("${shiro.cas.casServerLoginUrl}")
     private String casServerLoginUrl;
 
-    @Value("${shiro.cas.casService}")
-    private String casService;
+    @Value("${shiro.cas.callbackUrl}")
+    private String callbackUrl;
 
     @Value("${shiro.cas.casClientName}")
     private String casClientName;
@@ -34,7 +34,7 @@ public class Pac4jConfig {
                 casServerLoginUrl, casServerUrlPrefix);
         configuration.setAcceptAnyProxy(true);
         CasClient client = new CasClient(configuration);
-        String callbackUrl = casService + "?client_name=" + casClientName;
+        String callbackUrl = callbackUrl + "?client_name=" + casClientName;
         client.setCallbackUrl(callbackUrl);
         client.setName(casClientName);
         Clients clients = new Clients(callbackUrl, client);
@@ -47,15 +47,20 @@ public class Pac4jConfig {
     @Bean
     public Config config() {
         ShiroCasLogoutHandler casLogoutHandler = new ShiroCasLogoutHandler();
-        CasConfiguration casConfig = new CasConfiguration();
-        casConfig.setLoginUrl(casServerLoginUrl);
+        CasConfiguration casConfig = new CasConfiguration(casServerLoginUrl);
         casConfig.setLogoutHandler(casLogoutHandler);
-        CasClient casClient = new CasClient();
+        //TODO 不同的设置不同的毛病......
+        CasClient casClient = new CasClient(casConfig);
         casClient.setConfiguration(casConfig);
+        //设置client的name属性，注意要与callbackUrl中的client_name值一致，否则的话会报错：找不到 XXX client
+        casClient.setName(casClientName);
         Clients clients = new Clients();
-        clients.setCallbackUrl(casService);
+        /**
+         * 如果在callbackUrl中不添加client_name请求参数，会导致ticket验证通不过 -.-!! 整整困扰了我一周时间...
+         * TODO 该问题应该是和获取TGT的时候所使用的url不一致导致的，如果不自己添加client_name或设置了defaultClient的话，不知道什么时候会添加这个请求参数，具体需要研究代码
+         */
+        clients.setCallbackUrl(callbackUrl);
         clients.setClients(casClient);
-        clients.setDefaultClient(casClient);
         Config config = new Config(clients);
         return config;
     }
