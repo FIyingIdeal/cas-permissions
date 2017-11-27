@@ -1,6 +1,7 @@
 package com.hiynn.caspermissions.server.config;
 
 import io.buji.pac4j.filter.CallbackFilter;
+import io.buji.pac4j.filter.SecurityFilter;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -50,6 +51,14 @@ public class ShiroConfig {
         return realm;
     }
 
+    @Bean
+    public SecurityFilter serurityFilter() {
+        SecurityFilter casSecurityFilter = new SecurityFilter();
+        casSecurityFilter.setConfig(config);
+        casSecurityFilter.setClients("CasClient");
+        return casSecurityFilter;
+    }
+
     //CallbackFilter用来替代shiro-cas中的CasFilter
     @Bean
     public CallbackFilter callbackFilter() {
@@ -77,6 +86,7 @@ public class ShiroConfig {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
         filterChainDefinition.addPathDefinition("/login", "anon");
         filterChainDefinition.addPathDefinition("/hello", "authc");
+        filterChainDefinition.addPathDefinition("/cas/**", "securityFilter");
         filterChainDefinition.addPathDefinition("/callback", "cas");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
@@ -103,6 +113,7 @@ public class ShiroConfig {
         //注册自定义的Filter
         Map<String, Filter> shiroFilter = new LinkedHashMap<>();
         shiroFilter.put("cas", callbackFilter());
+        shiroFilter.put("securityFilter", serurityFilter());
         filterFactoryBean.setFilters(shiroFilter);
 
         /**
