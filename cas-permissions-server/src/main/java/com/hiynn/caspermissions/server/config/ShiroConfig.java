@@ -13,6 +13,7 @@ import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.pac4j.core.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -59,7 +60,11 @@ public class ShiroConfig {
         return casSecurityFilter;
     }
 
-    //CallbackFilter用来替代shiro-cas中的CasFilter
+    /**
+     * CallbackFilter用来替代shiro-cas中的CasFilter，该Filter做的事：
+     * 验证ticket是否有效
+     * TODO 该Filter其他任务有待研究
+     */
     @Bean
     public CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
@@ -73,21 +78,13 @@ public class ShiroConfig {
         return new Pac4jSubjectFactory();
     }
 
-    /*@Bean(name = "securityManager")
-    public SecurityManager securityManager() {
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(pac4jRealm());
-        securityManager.setSubjectFactory(subjectFactory());
-        return securityManager;
-    }*/
-
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
         filterChainDefinition.addPathDefinition("/login", "anon");
-        filterChainDefinition.addPathDefinition("/hello", "authc");
         filterChainDefinition.addPathDefinition("/cas/**", "securityFilter");
         filterChainDefinition.addPathDefinition("/callback", "cas");
+        filterChainDefinition.addPathDefinition("/hello", "authc");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
     }
@@ -108,7 +105,7 @@ public class ShiroConfig {
 
         filterFactoryBean.setSecurityManager(securityManager);
         filterFactoryBean.setLoginUrl(loginUrl);
-        filterFactoryBean.setSuccessUrl(successUrl);
+        //filterFactoryBean.setSuccessUrl(successUrl);
 
         //注册自定义的Filter
         Map<String, Filter> shiroFilter = new LinkedHashMap<>();
