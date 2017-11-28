@@ -3,13 +3,13 @@ shiro:
     casServerUrlPrefix: https://www.casserver.com:8443/cas
     casServerLoginUrl: ${shiro.cas.casServerUrlPrefix}/login
     #casService: https://{domain}:{server https port if https is enable OR http port}/{projectName}/{filter path mapping}
-    #
-    callbackUrl: https://www.casserver.com:9443/hiynn-cas/callback?client_name=${shiro.cas.casClientName}
+    #?client_name=${shiro.cas.casClientName}
+    callbackUrl: http://www.casserver.com:8080/hiynn-cas/callback
     casClientName: CasClient
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   #
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
-  successUrl: /hiynn-cas/hello
+  successUrl: /
 
 server:
   context-path: /hiynn-cas

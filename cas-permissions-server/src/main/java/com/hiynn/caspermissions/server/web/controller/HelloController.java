@@ -3,10 +3,7 @@ package com.hiynn.caspermissions.server.web.controller;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -15,6 +12,7 @@ import java.util.Map;
  * @date 2017/11/21 16:44
  */
 @RestController
+@RequestMapping(value = "/service")
 public class HelloController {
 
     @GetMapping(value = "/hello")

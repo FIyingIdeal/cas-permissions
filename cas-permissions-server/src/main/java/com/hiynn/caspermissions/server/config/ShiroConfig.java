@@ -13,11 +13,12 @@ import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.pac4j.core.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,8 +53,16 @@ public class ShiroConfig {
         return realm;
     }
 
-    @Bean
-    public SecurityFilter serurityFilter() {
+    /**
+     * 此处不要将Filter注册为Bean，通过{@link ShiroFilterFactoryBean#setFilters(Map)}来向Shiro中注入Filter
+     * 如果使用@Bean的方式注册为了一个Bean，且同时被注册到了Shiro当中，那这个Bean会被Spring和Shiro两者管理，在shiro的Filter执行完毕以后
+     * 这里的Filter还会在执行{@link org.apache.shiro.web.servlet.ProxiedFilterChain#doFilter(ServletRequest, ServletResponse)}
+     * 中的{@code this.orig.doFilter(...)}（即执行非Shiro的Filter，当与Spring整合的时候会执行Spring的Filter）时执行
+     * 那同一个Filter就会执行多次，这并不是我们所期望的，且可能会出错...                困扰了整整一天...
+     * @return
+     */
+    //@Bean
+    public SecurityFilter securityFilter() {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
         casSecurityFilter.setClients("CasClient");
@@ -65,7 +74,7 @@ public class ShiroConfig {
      * 验证ticket是否有效
      * TODO 该Filter其他任务有待研究
      */
-    @Bean
+    //@Bean
     public CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
         callbackFilter.setConfig(config);
@@ -81,10 +90,8 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
-        filterChainDefinition.addPathDefinition("/login", "anon");
-        filterChainDefinition.addPathDefinition("/cas/**", "securityFilter");
         filterChainDefinition.addPathDefinition("/callback", "cas");
-        filterChainDefinition.addPathDefinition("/hello", "authc");
+        filterChainDefinition.addPathDefinition("/service/**", "securityFilter");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
     }
@@ -110,11 +117,12 @@ public class ShiroConfig {
         //注册自定义的Filter
         Map<String, Filter> shiroFilter = new LinkedHashMap<>();
         shiroFilter.put("cas", callbackFilter());
-        shiroFilter.put("securityFilter", serurityFilter());
+        shiroFilter.put("securityFilter", securityFilter());
         filterFactoryBean.setFilters(shiroFilter);
 
         /**
          * 注册FilterChainDefinitionMap，shiro 4.0提供了{@link DefaultShiroFilterChainDefinition}用来辅助设置该属性
+         * TODO 但需要注意的是该辅助类中使用的是HashMap，可能会引发FilterChain的顺序问题。
          *
          * 出于灵活性考虑，可以将拦截器链的配置在配置文件中以字符串的形式设置，每一个拦截器链的设置以\n进行分隔，
          * 然后调用{@link ShiroFilterFactoryBean#setFilterChainDefinitions(String)}方法，Shiro会自动将其进行解析。
