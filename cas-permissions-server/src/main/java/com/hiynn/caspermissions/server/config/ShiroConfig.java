@@ -12,6 +12,7 @@ import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.pac4j.core.config.Config;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,7 @@ public class ShiroConfig {
     private SecurityManager securityManager;
 
     @Autowired
+    @Qualifier(value = "restConfig")
     private Config config;
 
     /**
@@ -64,7 +66,8 @@ public class ShiroConfig {
     public SecurityFilter securityFilter() {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
-        casSecurityFilter.setClients("CasClient");
+        //casSecurityFilter.setClients("CasClient");
+        casSecurityFilter.setClients("CasClient,CasRestFormClient");
         return casSecurityFilter;
     }
 

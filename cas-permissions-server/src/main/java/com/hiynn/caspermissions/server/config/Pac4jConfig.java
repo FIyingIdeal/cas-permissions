@@ -2,6 +2,7 @@ package com.hiynn.caspermissions.server.config;
 
 import com.hiynn.caspermissions.server.shiro.ShiroCasLogoutHandler;
 import org.pac4j.cas.client.CasClient;
+import org.pac4j.cas.client.rest.CasRestFormClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
@@ -26,8 +27,12 @@ public class Pac4jConfig {
     @Value("${shiro.cas.callbackUrl}")
     private String callbackUrl;
 
-    @Bean
-    public Config config() {
+    /**
+     * 使用CAS Server登录页面的Config配置，但这个在前后端分离的时候是需要解决CORS问题的
+     * @return
+     */
+    @Bean(name = "loginPageConfig")
+    public Config loginPageConfig() {
         ShiroCasLogoutHandler casLogoutHandler = new ShiroCasLogoutHandler();
         CasConfiguration casConfig = new CasConfiguration(casServerLoginUrl);
         casConfig.setLogoutHandler(casLogoutHandler);
@@ -50,6 +55,19 @@ public class Pac4jConfig {
          */
         clients.setCallbackUrl(callbackUrl);
         clients.setClients(casClient);
+        Config config = new Config(clients);
+        return config;
+    }
+
+    /**
+     * 使用REST形式的Config配置，测试中...
+     * @return
+     */
+    @Bean(name = "restConfig")
+    public Config restConfig() {
+        CasConfiguration casConfiguration = new CasConfiguration(casServerLoginUrl);
+        CasRestFormClient casRestClient = new CasRestFormClient(casConfiguration, "username", "password");
+        Clients clients = new Clients(casRestClient);
         Config config = new Config(clients);
         return config;
     }
