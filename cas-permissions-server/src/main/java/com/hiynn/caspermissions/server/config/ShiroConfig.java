@@ -67,7 +67,7 @@ public class ShiroConfig {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
         //casSecurityFilter.setClients("CasClient");
-        casSecurityFilter.setClients("CasClient,CasRestFormClient");
+        casSecurityFilter.setClients("CasRestFormClient");
         return casSecurityFilter;
     }
 

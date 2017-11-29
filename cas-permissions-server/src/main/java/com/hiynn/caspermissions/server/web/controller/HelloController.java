@@ -15,7 +15,7 @@ import java.util.Map;
 @RequestMapping(value = "/service")
 public class HelloController {
 
-    @GetMapping(value = "/hello")
+    @RequestMapping(value = "/hello", method = {RequestMethod.GET, RequestMethod.POST})
     public String helloWorld() {
         return "Hello World!";
     }
