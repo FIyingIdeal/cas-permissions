@@ -61,7 +61,6 @@ public class ShiroConfig {
      * 那同一个Filter就会执行多次，这并不是我们所期望的，且可能会出错...                困扰了整整一天...
      * @return
      */
-    //@Bean
     public SecurityFilter securityFilter() {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
@@ -74,7 +73,6 @@ public class ShiroConfig {
      * 验证ticket是否有效
      * TODO 该Filter其他任务有待研究
      */
-    //@Bean
     public CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
         callbackFilter.setConfig(config);

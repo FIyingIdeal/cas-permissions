@@ -26,33 +26,13 @@ public class Pac4jConfig {
     @Value("${shiro.cas.callbackUrl}")
     private String callbackUrl;
 
-    @Value("${shiro.cas.casClientName}")
-    private String casClientName;
-
-    /*@Bean
-    public Config config() {
-        CasConfiguration configuration = new CasConfiguration(
-                casServerLoginUrl, casServerUrlPrefix);
-        configuration.setAcceptAnyProxy(true);
-        CasClient client = new CasClient(configuration);
-        String callbackUrl = callbackUrl + "?client_name=" + casClientName;
-        client.setCallbackUrl(callbackUrl);
-        client.setName(casClientName);
-        Clients clients = new Clients(callbackUrl, client);
-        //clients.setDefaultClient(client);
-        Config config = new Config(clients);
-
-        return config;
-    }*/
-
     @Bean
     public Config config() {
         ShiroCasLogoutHandler casLogoutHandler = new ShiroCasLogoutHandler();
         CasConfiguration casConfig = new CasConfiguration(casServerLoginUrl);
         casConfig.setLogoutHandler(casLogoutHandler);
-        //TODO 不同的设置不同的毛病......
         CasClient casClient = new CasClient(casConfig);
-        casClient.setConfiguration(casConfig);
+        //casClient.setConfiguration(casConfig);
         /**
          * 如果手动设置client的name属性，注意要与callbackUrl中的client_name值一致，否则的话会报错：找不到 XXX client
          * 更好的方式是交给SecurityFilter来处理，它会在处理Client的时候检查callbackUrl中是否包含client_name=，如果没有的话，

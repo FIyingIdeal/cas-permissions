@@ -20,6 +20,11 @@ public class HelloController {
         return "Hello World!";
     }
 
+    @GetMapping(value = "/secondRequest")
+    public String secondRequest() {
+        return "Second Request!";
+    }
+
     @GetMapping(value = "/login")
     public String login(@RequestParam Map<String, String> userInfo) {
         Subject subject = SecurityUtils.getSubject();

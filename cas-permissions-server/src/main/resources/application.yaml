@@ -1,16 +1,19 @@
+server:
+  context-path: /hiynn-cas
+  port: 8888
+  https:
+    port: 9999
+    keyStorePath: D:/hiynn.keystore
+    keyStorePassword: 123456
+
 shiro:
   cas:
     casServerUrlPrefix: https://www.casserver.com:8443/cas
     casServerLoginUrl: ${shiro.cas.casServerUrlPrefix}/login
     #casService: https://{domain}:{server https port if https is enable OR http port}/{projectName}/{filter path mapping}
-    #?client_name=${shiro.cas.casClientName}
-    callbackUrl: http://www.casserver.com:8080/hiynn-cas/callback
-    casClientName: CasClient
+    #context-path中已经添加了“/”
+    callbackUrl: http://www.casserver.com:${server.port}${server.context-path}/callback
+
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
-  #
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
   successUrl: /
-
-server:
-  context-path: /hiynn-cas
-
