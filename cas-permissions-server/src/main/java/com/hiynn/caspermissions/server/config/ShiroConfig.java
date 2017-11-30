@@ -2,6 +2,7 @@ package com.hiynn.caspermissions.server.config;
 
 import io.buji.pac4j.filter.CallbackFilter;
 import io.buji.pac4j.filter.SecurityFilter;
+import io.buji.pac4j.profile.ShiroProfileManager;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -68,6 +69,10 @@ public class ShiroConfig {
         casSecurityFilter.setConfig(config);
         //casSecurityFilter.setClients("CasClient");
         casSecurityFilter.setClients("CasRestFormClient");
+        RestSecutiryLogin restSecutiryLogin = new RestSecutiryLogin();
+        restSecutiryLogin.setSaveProfileInSession(true);
+        restSecutiryLogin.setProfileManagerFactory(ShiroProfileManager::new);
+        casSecurityFilter.setSecurityLogic(restSecutiryLogin);
         return casSecurityFilter;
     }
 
