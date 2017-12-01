@@ -42,7 +42,7 @@ public class ShiroConfig {
     private SecurityManager securityManager;
 
     @Autowired
-    @Qualifier(value = "restConfig")
+    @Qualifier(value = "loginPageConfig")
     private Config config;
 
     /**
@@ -67,8 +67,8 @@ public class ShiroConfig {
     public SecurityFilter securityFilter() {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
-        //casSecurityFilter.setClients("CasClient");
-        casSecurityFilter.setClients("CasRestFormClient");
+        casSecurityFilter.setClients("CasClient");
+        //casSecurityFilter.setClients("CasRestFormClient");
         RestSecutiryLogin restSecutiryLogin = new RestSecutiryLogin();
         restSecutiryLogin.setSaveProfileInSession(true);
         restSecutiryLogin.setProfileManagerFactory(ShiroProfileManager::new);
