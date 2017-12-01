@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>Title</title>
+</head>
+<body>
+<script src="jquery-3.2.0.min.js"></script>
+<script>
+    $.ajax({
+        //url:'http://www.casserver.com:8080/hiynn-cas/service/hello',
+        url:'http://www.casserver.com:8080/hiynn-cas/service/hello',
+        type:'get',
+        //dataType: 'json',
+        success:function(data){
+            console.log(123,data);
+        },
+        error:function(data){
+            console.log('error')
+        }
+    })
+</script>
+</body>
+</html>
