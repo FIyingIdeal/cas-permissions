@@ -3,6 +3,7 @@ package com.hiynn.caspermissions.server.web.controller;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,9 +16,16 @@ import java.util.Map;
 @RequestMapping(value = "/service")
 public class HelloController {
 
+    @Value("${server.testHelloMessage}")
+    private String testHelloMessage;
+
+    /**
+     * 如果是线上环境的话，应该是构造通知前端登录成功的JSON
+     * @return
+     */
     @RequestMapping(value = "/hello", method = {RequestMethod.GET, RequestMethod.POST})
     public String helloWorld() {
-        return "Hello World!";
+        return "Hello " + testHelloMessage + "!";
     }
 
     @GetMapping(value = "/secondRequest")
@@ -40,14 +48,4 @@ public class HelloController {
         return "login fail";
     }
 
-    @GetMapping(value = "/logout")
-    public String logout() {
-        Subject subject = SecurityUtils.getSubject();
-        try {
-            subject.logout();
-            return "logout success";
-        } catch (Exception e) {
-            return "logout fail";
-        }
-    }
 }

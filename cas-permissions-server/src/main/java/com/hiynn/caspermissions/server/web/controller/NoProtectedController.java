@@ -14,4 +14,9 @@ public class NoProtectedController {
     public String test() {
         return "Hello World!";
     }
+
+    @GetMapping(value = "/ajaxlogout")
+    public String logout() {
+        return "bye, logout success!";
+    }
 }

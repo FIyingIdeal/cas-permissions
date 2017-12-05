@@ -10,7 +10,7 @@ import java.util.List;
  * @author yanchao
  * @date 2017/11/30 11:49
  */
-public class RestSecutiryLogin extends DefaultSecurityLogic<Object, J2EContext> {
+public class RestSecurityLogin extends DefaultSecurityLogic<Object, J2EContext> {
 
     @Override
     protected boolean loadProfilesFromSession(J2EContext context, List<Client> currentClients) {

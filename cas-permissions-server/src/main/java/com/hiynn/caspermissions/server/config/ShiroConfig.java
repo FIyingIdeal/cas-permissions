@@ -1,8 +1,8 @@
 package com.hiynn.caspermissions.server.config;
 
 import io.buji.pac4j.filter.CallbackFilter;
+import io.buji.pac4j.filter.LogoutFilter;
 import io.buji.pac4j.filter.SecurityFilter;
-import io.buji.pac4j.profile.ShiroProfileManager;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
 import org.apache.shiro.mgt.SecurityManager;
@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.Filter;
 import javax.servlet.ServletRequest;
@@ -37,6 +40,12 @@ public class ShiroConfig {
 
     @Value("${shiro.successUrl}")
     protected String successUrl;
+
+    @Value("${shiro.cas.callbackFilterDefaultUrl}")
+    protected String callbackFilterDefaultUrl;
+
+    @Value("${shiro.cas.logoutFilterDefaultUrl}")
+    protected String logoutFilterDefaultUrl;
 
     @Autowired
     private SecurityManager securityManager;
@@ -64,15 +73,17 @@ public class ShiroConfig {
      * 那同一个Filter就会执行多次，这并不是我们所期望的，且可能会出错...                困扰了整整一天...
      * @return
      */
-    public SecurityFilter securityFilter() {
+    private SecurityFilter securityFilter() {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
         casSecurityFilter.setClients("CasClient");
         //casSecurityFilter.setClients("CasRestFormClient");
-        RestSecutiryLogin restSecutiryLogin = new RestSecutiryLogin();
-        restSecutiryLogin.setSaveProfileInSession(true);
-        restSecutiryLogin.setProfileManagerFactory(ShiroProfileManager::new);
-        casSecurityFilter.setSecurityLogic(restSecutiryLogin);
+        /*
+        //设置了rest方式的将身份信息保存到session当中，但无法解决第二个系统不需要在请求中携带username和password即可登录的问题
+        RestSecurityLogin restSecurityLogin = new RestSecurityLogin();
+        restSecurityLogin.setSaveProfileInSession(true);
+        restSecurityLogin.setProfileManagerFactory(ShiroProfileManager::new);
+        casSecurityFilter.setSecurityLogic(restSecurityLogin);*/
         return casSecurityFilter;
     }
 
@@ -81,11 +92,44 @@ public class ShiroConfig {
      * 验证ticket是否有效
      * TODO 该Filter其他任务有待研究
      */
-    public CallbackFilter callbackFilter() {
+    private CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
         callbackFilter.setConfig(config);
         callbackFilter.setMultiProfile(true);
+        /**
+         * 设置默认的callback跳转页面
+         * 默认情况下，当访问受保护的页面的时候，如果没有登录，会先保存请求路径到session中，然后跳转到登录页面，登录成功后会跳转回原始请求页面
+         * 如果从session中没有拿到对应的请求页面，默认会跳转到"/"，可以通过setDefaultUrl(String)更改默认跳转
+         */
+        callbackFilter.setDefaultUrl(callbackFilterDefaultUrl);
         return callbackFilter;
+    }
+
+    /**
+     * 控制跨域的Filter  TODO 测试使用
+     * @return
+     */
+    private CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(source);
+    }
+
+    /**
+     * 退出Filter
+     * @return
+     */
+    private LogoutFilter logoutFilter() {
+        LogoutFilter logoutFilter = new LogoutFilter();
+        logoutFilter.setConfig(config);
+        logoutFilter.setLocalLogout(true);
+        logoutFilter.setCentralLogout(true);
+        logoutFilter.setDefaultUrl(logoutFilterDefaultUrl);
+        return logoutFilter;
     }
 
     @Bean(name = "subjectFactory")
@@ -93,11 +137,31 @@ public class ShiroConfig {
         return new Pac4jSubjectFactory();
     }
 
+    /**
+     * 注册自定义的Filter
+     * @return
+     */
+    protected Map<String, Filter> registerUserFilter() {
+        Map<String, Filter> shiroFilter = new LinkedHashMap<>();
+        //SecurityFilter是pac4j-shiro提供的Filter，每一个受保护（需要登录权限）的URL都要通过该Filter进行验证
+        shiroFilter.put("securityFilter", securityFilter());
+        //CallbackFilter是pac4j-shiro提供的Filter，控制身份验证后调回原请求
+        shiroFilter.put("cas", callbackFilter());
+        shiroFilter.put("cors", corsFilter());
+        shiroFilter.put("logout", logoutFilter());
+        return shiroFilter;
+    }
+
+    /**
+     * 定义拦截器链
+     * @return
+     */
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
+        filterChainDefinition.addPathDefinition("/logout", "logout");
+        filterChainDefinition.addPathDefinition("/service/**", "cors, securityFilter");
         filterChainDefinition.addPathDefinition("/callback", "cas");
-        filterChainDefinition.addPathDefinition("/service/**", "securityFilter");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
     }
@@ -119,12 +183,7 @@ public class ShiroConfig {
         filterFactoryBean.setSecurityManager(securityManager);
         filterFactoryBean.setLoginUrl(loginUrl);
         //filterFactoryBean.setSuccessUrl(successUrl);
-
-        //注册自定义的Filter
-        Map<String, Filter> shiroFilter = new LinkedHashMap<>();
-        shiroFilter.put("cas", callbackFilter());
-        shiroFilter.put("securityFilter", securityFilter());
-        filterFactoryBean.setFilters(shiroFilter);
+        filterFactoryBean.setFilters(registerUserFilter());
 
         /**
          * 注册FilterChainDefinitionMap，shiro 4.0提供了{@link DefaultShiroFilterChainDefinition}用来辅助设置该属性
