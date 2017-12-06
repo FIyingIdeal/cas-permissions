@@ -21,6 +21,7 @@
 	<modules>
 		<module>cas-permissions-core</module>
 		<module>cas-permissions-server</module>
+		<module>cas-permissions-client</module>
 	</modules>
 
 	<properties>

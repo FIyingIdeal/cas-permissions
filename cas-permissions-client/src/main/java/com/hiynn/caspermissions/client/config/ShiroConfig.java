@@ -1,9 +1,10 @@
-package com.hiynn.caspermissions.server.config;
+package com.hiynn.caspermissions.client.config;
 
 import com.hiynn.caspermissions.core.config.AbstractShiroConfig;
 import io.buji.pac4j.realm.Pac4jRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 /**
  * @author yanchao
- * @date 2017/11/21 11:29
+ * @date 2017-12-6 21:04:46
  * @see ShiroWebFilterConfiguration
  */
 @Configuration

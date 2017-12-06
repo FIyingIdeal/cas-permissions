@@ -1,4 +1,4 @@
-package com.hiynn.caspermissions.client;
+package com.hiynn.caspermissions;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
