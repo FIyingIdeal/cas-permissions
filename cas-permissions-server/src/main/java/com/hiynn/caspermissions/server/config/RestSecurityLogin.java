@@ -10,6 +10,7 @@ import java.util.List;
  * @author yanchao
  * @date 2017/11/30 11:49
  */
+@Deprecated
 public class RestSecurityLogin extends DefaultSecurityLogic<Object, J2EContext> {
 
     @Override

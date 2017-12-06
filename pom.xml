@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>cas-permissions</name>
-	<description>Hiynn CAS and Permissions project for Spring Boot</description>
+	<description>CAS and Permissions System for Hiynn</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -17,6 +17,11 @@
 		<version>1.5.8.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<modules>
+		<module>cas-permissions-core</module>
+		<module>cas-permissions-server</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

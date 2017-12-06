@@ -4,18 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hiynn</groupId>
-	<artifactId>cas-permissions-server</artifactId>
+	<artifactId>cas-permissions-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>cas-permissions-server</name>
-	<description>cas-permissions-server project for Hiynn CAS and Permission System</description>
+	<name>cas-permissions-client</name>
+	<description>cas-permissions-client project for Hiynn CAS and Permissions System</description>
 
 	<parent>
 		<groupId>com.hiynn</groupId>
-		<artifactId>cas-permissions</artifactId>
+		<artifactId>cas-permissions-core</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath/>
 	</parent>
 
 	<properties>
@@ -25,24 +24,16 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
 
 		<dependency>
-			<groupId>com.hiynn</groupId>
-			<artifactId>cas-permissions-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.3.1</version>
-		</dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>-->
-
 	</dependencies>
 
 	<build>
@@ -52,7 +43,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-
 	</build>
+
 
 </project>

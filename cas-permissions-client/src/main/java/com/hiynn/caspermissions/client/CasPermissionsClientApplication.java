@@ -1,13 +1,12 @@
-package com.hiynn.caspermissions.server;
+package com.hiynn.caspermissions.client;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CasPermissionsServerApplication {
+public class CasPermissionsClientApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CasPermissionsServerApplication.class, args);
+		SpringApplication.run(CasPermissionsClientApplication.class, args);
 	}
-
 }

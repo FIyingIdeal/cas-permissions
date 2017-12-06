@@ -1,0 +1,28 @@
+server:
+  schema: http
+  context-path: /hiynn-cas
+  port: 8080
+  https:
+    port: 9443
+    keyStorePath: D:/hiynn.keystore
+    keyStorePassword: 123456
+  testHelloMessage: server1
+
+shiro:
+  cas:
+    schema: http
+    domain: 192.168.3.20
+    port: 8089
+    context-path: /cas
+    casServerUrlPrefix: ${shiro.cas.schema}://${shiro.cas.domain}:${shiro.cas.port}${shiro.cas.context-path}
+    casServerLoginUrl: ${shiro.cas.casServerUrlPrefix}/login
+    callbackUrlSuffix: /callback
+    callbackUrl: ${server.schema}://${shiro.cas.domain}:${server.port}${server.context-path}${shiro.cas.callbackUrlSuffix}
+    #callbackUrl在身份验证完毕以后要跳转回原始请求页面（OriginallyRequestedUrl，保存到session中）
+    #如果因未知因素导致未从session中拿到OriginallyRequestedUrl，则会跳转到defaultUrl，其值默认为“/”
+    callbackFilterDefaultUrl: ${server.schema}://${shiro.cas.domain}:${server.port}${server.context-path}/service/hello
+    logoutFilterDefaultUrl: ${server.schema}://${shiro.cas.domain}:${server.port}${server.context-path}/ajaxlogout
+
+  #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
+  loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
+  successUrl: /
