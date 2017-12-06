@@ -9,8 +9,10 @@ server:
 
 shiro:
   cas:
-    domain: www.casserver.com
-    casServerUrlPrefix: https://${shiro.cas.domain}:8443/cas
+    #domain: www.casserver.com
+    #casServerUrlPrefix: https://${shiro.cas.domain}:8443/cas
+    domain: 192.168.3.20
+    casServerUrlPrefix: http://${shiro.cas.domain}:8089/cas
     casServerLoginUrl: ${shiro.cas.casServerUrlPrefix}/login
     #casService: https://{domain}:{server https port if https is enable OR http port}/{projectName}/{filter path mapping}
     #context-path中已经添加了“/”
