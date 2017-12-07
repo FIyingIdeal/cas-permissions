@@ -16,8 +16,8 @@ import java.util.Map;
 @RequestMapping(value = "/service")
 public class HelloController {
 
-    @Value("${server.testHelloMessage}")
-    private String testHelloMessage;
+    @Value("${server.description}")
+    private String description;
 
     /**
      * 如果是线上环境的话，应该是构造通知前端登录成功的JSON
@@ -25,7 +25,7 @@ public class HelloController {
      */
     @RequestMapping(value = "/hello", method = {RequestMethod.GET, RequestMethod.POST})
     public String helloWorld() {
-        return "Hello " + testHelloMessage + "!";
+        return "Hello " + description + "!";
     }
 
     @GetMapping(value = "/secondRequest")

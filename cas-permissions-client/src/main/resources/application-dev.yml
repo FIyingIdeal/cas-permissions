@@ -6,12 +6,12 @@ server:
     port: 9997
     keyStorePath: D:/hiynn.keystore
     keyStorePassword: 123456
-  testHelloMessage: cas-permissions-client
+  description: cas-permissions-client
 
 shiro:
   cas:
     schema: http
-    #domain: 192.168.3.20
+    domain: 192.168.3.20
     port: 8080
     context-path: /cas
     casServerUrlPrefix: ${shiro.cas.schema}://${shiro.cas.domain}:${shiro.cas.port}${shiro.cas.context-path}

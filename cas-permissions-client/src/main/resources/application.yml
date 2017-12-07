@@ -1,4 +1,0 @@
-spring:
-  profiles:
-    #指定要加载的配置文件后缀，可以指定多个，将会依次加载指定的多个配置文件，即后边的优先级会更高
-    active: default, dev
