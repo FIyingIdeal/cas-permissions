@@ -10,10 +10,32 @@ Target Server Type    : MYSQL
 Target Server Version : 50616
 File Encoding         : 65001
 
-Date: 2017-12-07 19:04:21
+Date: 2017-12-08 12:11:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for t_app
+-- ----------------------------
+DROP TABLE IF EXISTS `t_app`;
+CREATE TABLE `t_app` (
+  `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '系统id',
+  `app_key` varchar(255) NOT NULL COMMENT '系统key值',
+  `app_name` varchar(255) NOT NULL COMMENT '系统名称',
+  `app_desc` varchar(255) DEFAULT NULL COMMENT '系统描述',
+  `app_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '系统状态：0停用，1启用',
+  `app_context_path` varchar(255) DEFAULT NULL COMMENT '系统根路经',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_appkey` (`app_key`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_app
+-- ----------------------------
+INSERT INTO `t_app` VALUES ('1', 'appkey1', '测试系统', '测试系统描述', '1', '/castest', '2017-12-07 18:13:35', '2017-12-07 18:13:38');
 
 -- ----------------------------
 -- Table structure for t_permission
@@ -21,16 +43,16 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `t_permission`;
 CREATE TABLE `t_permission` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `system_id` int(4) NOT NULL COMMENT '系统id',
+  `app_id` int(4) NOT NULL COMMENT '系统id',
   `permission` varchar(50) DEFAULT NULL,
   `permission_name` varchar(50) DEFAULT NULL,
   `available` tinyint(1) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `gmt_create` datetime(6) DEFAULT NULL,
   `gmt_modified` datetime(6) DEFAULT NULL,
-  PRIMARY KEY (`id`,`system_id`),
-  KEY `fk_permission_systemid` (`system_id`),
-  CONSTRAINT `fk_permission_systemid` FOREIGN KEY (`system_id`) REFERENCES `t_system` (`id`)
+  PRIMARY KEY (`id`,`app_id`),
+  KEY `fk_permission_appid` (`app_id`),
+  CONSTRAINT `fk_permission_appid` FOREIGN KEY (`app_id`) REFERENCES `t_app` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -47,16 +69,16 @@ INSERT INTO `t_permission` VALUES ('4', '1', 'user:view', '查看用户', '1', '
 DROP TABLE IF EXISTS `t_role`;
 CREATE TABLE `t_role` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `system_id` int(4) NOT NULL COMMENT '系统id',
+  `app_id` int(4) NOT NULL COMMENT '系统id',
   `role` varchar(50) NOT NULL,
   `role_name` varchar(50) DEFAULT NULL,
   `available` tinyint(1) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `gmt_create` datetime(6) DEFAULT NULL,
   `gmt_modified` datetime(6) DEFAULT NULL,
-  PRIMARY KEY (`id`,`system_id`),
-  KEY `fk_role_systemid` (`system_id`),
-  CONSTRAINT `fk_role_systemid` FOREIGN KEY (`system_id`) REFERENCES `t_system` (`id`)
+  PRIMARY KEY (`id`,`app_id`),
+  KEY `fk_role_appid` (`app_id`) USING BTREE,
+  CONSTRAINT `fk_role_appid` FOREIGN KEY (`app_id`) REFERENCES `t_app` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -87,41 +109,21 @@ INSERT INTO `t_role_permission` VALUES ('1', '4', '2017-09-19 14:56:47.000000', 
 INSERT INTO `t_role_permission` VALUES ('2', '4', '2017-09-19 14:57:38.000000', '2017-09-19 14:57:41.000000');
 
 -- ----------------------------
--- Table structure for t_system
--- ----------------------------
-DROP TABLE IF EXISTS `t_system`;
-CREATE TABLE `t_system` (
-  `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '系统id',
-  `system_name` varchar(255) NOT NULL COMMENT '系统名称',
-  `system_desc` varchar(255) DEFAULT NULL COMMENT '系统描述',
-  `system_status` char(1) NOT NULL DEFAULT '0' COMMENT '系统状态：0停用，1启用',
-  `system_context_path` varchar(255) DEFAULT NULL COMMENT '系统根路经',
-  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
-  `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_system
--- ----------------------------
-INSERT INTO `t_system` VALUES ('1', '测试系统', '测试系统描述', '1', '/castest', '2017-12-07 18:13:35', '2017-12-07 18:13:38');
-
--- ----------------------------
 -- Table structure for t_url_filter
 -- ----------------------------
 DROP TABLE IF EXISTS `t_url_filter`;
 CREATE TABLE `t_url_filter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `system_id` int(4) NOT NULL,
+  `app_id` int(4) NOT NULL,
   `name` varchar(100) DEFAULT NULL COMMENT '描述',
   `url` varchar(100) DEFAULT NULL COMMENT '路径',
   `roles` varchar(100) DEFAULT NULL COMMENT '访问url需要的角色',
   `permissions` varchar(100) DEFAULT NULL COMMENT '访问url需要的权限',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`,`system_id`),
-  KEY `fk_url_filter_systemid` (`system_id`),
-  CONSTRAINT `fk_url_filter_systemid` FOREIGN KEY (`system_id`) REFERENCES `t_system` (`id`)
+  PRIMARY KEY (`id`,`app_id`),
+  KEY `fk_url_filter_appid` (`app_id`) USING BTREE,
+  CONSTRAINT `fk_url_filter_appid` FOREIGN KEY (`app_id`) REFERENCES `t_app` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -153,8 +155,8 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('1', 'admin', 'fd32e054edde3dfa430f2384370b5e7e', 'a522078f8b8bcccc341ba1268a8c99a6', '0', null, null, null, null, null, null, null, null);
-INSERT INTO `t_user` VALUES ('11', 'admin1', 'fd32e054edde3dfa430f2384370b5e7e', 'a522078f8b8bcccc341ba1268a8c99a6', '0', '0', 'string', '0', '1@qq.com', '12345678901', null, '2017-06-02 19:21:03.000000', '2017-06-02 19:21:03.000000');
+INSERT INTO `t_user` VALUES ('1', 'admin', 'fd32e054edde3dfa430f2384370b5e7e', 'a522078f8b8bcccc341ba1268a8c99a6', '0', null, null, null, null, null, null);
+INSERT INTO `t_user` VALUES ('11', 'admin1', 'fd32e054edde3dfa430f2384370b5e7e', 'a522078f8b8bcccc341ba1268a8c99a6', '0', '0', '1@qq.com', '12345678901', null, '2017-06-02 19:21:03.000000', '2017-06-02 19:21:03.000000');
 
 -- ----------------------------
 -- Table structure for t_user_role
@@ -174,21 +176,3 @@ CREATE TABLE `t_user_role` (
 -- ----------------------------
 INSERT INTO `t_user_role` VALUES ('1', '1', 'admin', '2017-09-19 14:53:33.000000', '2017-09-19 14:53:36.000000');
 INSERT INTO `t_user_role` VALUES ('11', '1', 'admin1', null, null);
-
--- ----------------------------
--- Table structure for t_user_source
--- ----------------------------
-DROP TABLE IF EXISTS `t_user_source`;
-CREATE TABLE `t_user_source` (
-  `source_id` tinyint(1) NOT NULL COMMENT '用户来源标志',
-  `source_name` varchar(50) NOT NULL COMMENT '用户来源名称'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of t_user_source
--- ----------------------------
-INSERT INTO `t_user_source` VALUES ('0', '网站注册');
-INSERT INTO `t_user_source` VALUES ('1', 'QQ登录');
-INSERT INTO `t_user_source` VALUES ('2', '微信登录');
-INSERT INTO `t_user_source` VALUES ('3', '支付宝登录');
-INSERT INTO `t_user_source` VALUES ('4', '新浪微博登录');
