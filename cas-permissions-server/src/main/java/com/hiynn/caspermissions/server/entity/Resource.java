@@ -5,16 +5,16 @@ import java.time.LocalDateTime;
 
 /**
  * @author yanchao
- * @datetime 2017-12-7 21:43:40
+ * @date 2017/12/8 9:52
  */
-public class Role implements Serializable {
+public class Resource implements Serializable {
 
     private Long id;
     private Long appId;
-    private String role;
-    private String roleName;
-    private Boolean avaliable;
-    private String description;
+    private String name;
+    private String url;
+    private String roles;
+    private String permissions;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
@@ -34,36 +34,36 @@ public class Role implements Serializable {
         this.appId = appId;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getUrl() {
+        return url;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public Boolean getAvaliable() {
-        return avaliable;
+    public String getRoles() {
+        return roles;
     }
 
-    public void setAvaliable(Boolean avaliable) {
-        this.avaliable = avaliable;
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPermissions() {
+        return permissions;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
     }
 
     public LocalDateTime getGmtCreate() {
@@ -84,13 +84,13 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "Role{" +
+        return "Resource{" +
                 "id=" + id +
                 ", appId=" + appId +
-                ", role='" + role + '\'' +
-                ", roleName='" + roleName + '\'' +
-                ", avaliable=" + avaliable +
-                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", roles='" + roles + '\'' +
+                ", permissions='" + permissions + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
                 '}';

@@ -14,7 +14,8 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String salt;
-    private boolean locked;
+    private Boolean locked = Boolean.FALSE;
+    private Long organizationId;
     private String email;
     private String telephone;
     private LocalDate birthday;
@@ -53,12 +54,20 @@ public class User implements Serializable {
         this.salt = salt;
     }
 
-    public boolean isLocked() {
+    public Boolean getLocked() {
         return locked;
     }
 
-    public void setLocked(boolean locked) {
+    public void setLocked(Boolean locked) {
         this.locked = locked;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 
     public String getEmail() {

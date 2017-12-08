@@ -26,3 +26,11 @@ shiro:
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
   successUrl: /
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/hiynn_cas_permissions_system
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root

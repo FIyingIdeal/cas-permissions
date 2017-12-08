@@ -5,15 +5,15 @@ import java.time.LocalDateTime;
 
 /**
  * @author yanchao
- * @datetime 2017-12-7 21:43:40
+ * @date 2017/12/8 9:32
  */
-public class Role implements Serializable {
+public class Permission implements Serializable {
 
     private Long id;
     private Long appId;
-    private String role;
-    private String roleName;
-    private Boolean avaliable;
+    private String permission;
+    private String permissionName;
+    private Boolean available;
     private String description;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
@@ -34,28 +34,28 @@ public class Role implements Serializable {
         this.appId = appId;
     }
 
-    public String getRole() {
-        return role;
+    public String getPermission() {
+        return permission;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setPermission(String permission) {
+        this.permission = permission;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getPermissionName() {
+        return permissionName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
     }
 
-    public Boolean getAvaliable() {
-        return avaliable;
+    public Boolean getAvailable() {
+        return available;
     }
 
-    public void setAvaliable(Boolean avaliable) {
-        this.avaliable = avaliable;
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public String getDescription() {
@@ -84,12 +84,12 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "Role{" +
+        return "Permission{" +
                 "id=" + id +
                 ", appId=" + appId +
-                ", role='" + role + '\'' +
-                ", roleName='" + roleName + '\'' +
-                ", avaliable=" + avaliable +
+                ", permission='" + permission + '\'' +
+                ", permissionName='" + permissionName + '\'' +
+                ", available=" + available +
                 ", description='" + description + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +

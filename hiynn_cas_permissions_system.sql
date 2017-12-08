@@ -140,8 +140,6 @@ CREATE TABLE `t_user` (
   `password` varchar(50) NOT NULL COMMENT '密码',
   `salt` varchar(50) NOT NULL COMMENT '密码加密的salt',
   `locked` tinyint(1) unsigned DEFAULT '0' COMMENT '是否锁定',
-  `source` tinyint(1) unsigned DEFAULT '0' COMMENT '用户来源，参考t_user_source',
-  `source_username` varchar(100) DEFAULT NULL COMMENT '第三方登录用户名',
   `organization_id` int(20) unsigned DEFAULT NULL COMMENT '组织部门id',
   `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
   `telephone` varchar(30) DEFAULT NULL COMMENT '联系电话',
