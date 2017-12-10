@@ -2,6 +2,7 @@ package com.hiynn.caspermissions.server.config;
 
 import com.hiynn.caspermissions.core.remote.IRemoteService;
 import com.hiynn.caspermissions.server.service.RemoteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
@@ -13,10 +14,13 @@ import org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter;
 @Configuration
 public class RemoteServiceConfig {
 
+    @Autowired
+    private RemoteService remoteService;
+
     @Bean("/remoteService")
     public HttpInvokerServiceExporter httpInvokerServiceExporter() {
         HttpInvokerServiceExporter exporter = new HttpInvokerServiceExporter();
-        exporter.setService(new RemoteService());
+        exporter.setService(remoteService);
         exporter.setServiceInterface(IRemoteService.class);
         return exporter;
     }

@@ -1,5 +1,7 @@
 package com.hiynn.caspermissions.server.web.controller;
 
+import com.hiynn.caspermissions.server.service.RemoteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class NoProtectedController {
 
+    @Autowired
+    private RemoteService remoteService;
+
     @GetMapping(value = "/hello1")
     public String test() {
         return "Hello World!";
@@ -18,5 +23,10 @@ public class NoProtectedController {
     @GetMapping(value = "/ajaxlogout")
     public String logout() {
         return "bye, logout success!";
+    }
+
+    @GetMapping(value = "/remote")
+    public Object getRemote() {
+        return remoteService.getRoles("admin", "appkey1");
     }
 }

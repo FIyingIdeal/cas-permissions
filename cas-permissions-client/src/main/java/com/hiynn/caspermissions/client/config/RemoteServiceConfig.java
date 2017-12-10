@@ -12,7 +12,7 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 @Configuration
 public class RemoteServiceConfig {
 
-    @Bean
+    @Bean()
     public HttpInvokerProxyFactoryBean httpInvokerProxyFactoryBean() {
         HttpInvokerProxyFactoryBean httpInvokerProxyFactoryBean =
                 new HttpInvokerProxyFactoryBean();
