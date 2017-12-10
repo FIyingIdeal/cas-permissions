@@ -13,10 +13,23 @@ public class Role implements Serializable {
     private Long appId;
     private String role;
     private String roleName;
-    private Boolean avaliable;
+    private Boolean available = Boolean.TRUE;
     private String description;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
+
+    public Role() {}
+
+    public Role(Long appId, String role, String roleName, Boolean available, String description,
+                LocalDateTime gmtCreate, LocalDateTime gmtModified) {
+        this.appId = appId;
+        this.role = role;
+        this.roleName = roleName;
+        this.available = available;
+        this.description = description;
+        this.gmtCreate = gmtCreate;
+        this.gmtModified = gmtModified;
+    }
 
     public Long getId() {
         return id;
@@ -50,12 +63,12 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-    public Boolean getAvaliable() {
-        return avaliable;
+    public Boolean getAvailable() {
+        return available;
     }
 
-    public void setAvaliable(Boolean avaliable) {
-        this.avaliable = avaliable;
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public String getDescription() {
@@ -89,7 +102,7 @@ public class Role implements Serializable {
                 ", appId=" + appId +
                 ", role='" + role + '\'' +
                 ", roleName='" + roleName + '\'' +
-                ", avaliable=" + avaliable +
+                ", available=" + available +
                 ", description='" + description + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
