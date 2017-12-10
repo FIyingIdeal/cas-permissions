@@ -23,11 +23,11 @@ public interface PermissionMapper {
     @Delete({"delete from t_permission where id = #{id}"})
     int deletePermission(Long id);
 
-    @Select({"select id, app_id, permission, permission_name, available, description, gmt_create, " +
-            "gmt_modified from t_permission where id = #{permissionId}"})
+    @Select({"select id, app_id as appId, permission, permission_name as permissionName, available, description, " +
+            "gmt_create as gmtCreate, gmt_modified as gmtModified from t_permission where id = #{permissionId}"})
     Permission getPermissionById(Long permissionId);
 
-    @Select({"select id, app_id, permission, permission_name, available, description, gmt_create, " +
-            "gmt_modified from t_permission where app_id = #{appId}"})
+    @Select({"select id, app_id as appId, permission, permission_name as permissionName, available, description, " +
+            "gmt_create as gmtCreate, gmt_modified as gmtModified from t_permission where app_id = #{appId}"})
     List<Permission> getPermissionsByAppId(Long appId);
 }

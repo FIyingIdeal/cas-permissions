@@ -10,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -43,11 +46,17 @@ public class RoleServiceTest {
         logger.info("role info : " + role);
     }
 
-
     @Test
     public void getRolesByAppId() {
         Long appId = 1L;
         List<Role> roles = roleService.getRolesByAppId(appId);
         logger.info("roles info : " + roles);
+    }
+
+    @Test
+    public void getPermissions() {
+        Set<Long> roleIds = new HashSet<>(Arrays.asList(1L,2L));
+        Set<String> permissions = roleService.getRolePermissions(roleIds);
+        System.out.println(permissions);
     }
 }

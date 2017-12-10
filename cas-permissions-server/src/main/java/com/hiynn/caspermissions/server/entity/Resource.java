@@ -18,6 +18,19 @@ public class Resource implements Serializable {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
+    public Resource() {}
+
+    public Resource(Long appId, String name, String url, String roles, String permissions,
+                    LocalDateTime gmtCreate, LocalDateTime gmtModified) {
+        this.appId = appId;
+        this.name = name;
+        this.url = url;
+        this.roles = roles;
+        this.permissions = permissions;
+        this.gmtCreate = gmtCreate;
+        this.gmtModified = gmtModified;
+    }
+
     public Long getId() {
         return id;
     }

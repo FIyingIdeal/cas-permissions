@@ -1,6 +1,6 @@
 server:
   schema: http
-  context-path: /hiynn-cas
+  context-path: /hiynn-cas-server
   port: 8080
   https:
     port: 9443

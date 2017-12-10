@@ -3,6 +3,8 @@ package com.hiynn.caspermissions.server.dao;
 import com.hiynn.caspermissions.server.entity.User;
 import org.apache.ibatis.annotations.*;
 
+import java.util.Set;
+
 /**
  * @author yanchao
  * @date 2017/12/8 11:10
