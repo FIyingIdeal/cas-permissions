@@ -1,6 +1,7 @@
 package com.hiynn.caspermissions.client.config;
 
 import com.hiynn.caspermissions.core.remote.IRemoteService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
@@ -12,11 +13,14 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 @Configuration
 public class RemoteServiceConfig {
 
-    @Bean()
+    @Value("${server.service.remoteServiceUrl}")
+    private String remoteServiceUrl;
+
+    @Bean(name = "remoteService")
     public HttpInvokerProxyFactoryBean httpInvokerProxyFactoryBean() {
         HttpInvokerProxyFactoryBean httpInvokerProxyFactoryBean =
                 new HttpInvokerProxyFactoryBean();
-        httpInvokerProxyFactoryBean.setServiceUrl("http://localhost:8080/hiynn-cas-server/remoteService");
+        httpInvokerProxyFactoryBean.setServiceUrl(remoteServiceUrl);
         httpInvokerProxyFactoryBean.setServiceInterface(IRemoteService.class);
         return httpInvokerProxyFactoryBean;
     }

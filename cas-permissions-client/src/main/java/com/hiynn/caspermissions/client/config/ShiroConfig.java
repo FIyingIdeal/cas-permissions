@@ -1,13 +1,15 @@
 package com.hiynn.caspermissions.client.config;
 
+import com.hiynn.caspermissions.client.shiro.ClientPac4jRealm;
 import com.hiynn.caspermissions.core.config.AbstractShiroConfig;
-import io.buji.pac4j.realm.Pac4jRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +22,10 @@ import java.util.Map;
  * @date 2017-12-6 21:04:46
  * @see ShiroWebFilterConfiguration
  */
-@Configuration
+//@Configuration
 public class ShiroConfig extends AbstractShiroConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
 
     @Autowired
     protected SecurityManager securityManager;
@@ -33,7 +37,7 @@ public class ShiroConfig extends AbstractShiroConfig {
      */
     @Bean
     public Realm pac4jRealm() {
-        Pac4jRealm realm = new Pac4jRealm();
+        ClientPac4jRealm realm = new ClientPac4jRealm();
         return realm;
     }
 

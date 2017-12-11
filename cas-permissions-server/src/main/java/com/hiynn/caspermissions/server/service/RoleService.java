@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -70,6 +67,9 @@ public class RoleService {
 
     public Set<String> getUserAppStringPermissions(Long userId, Long appId) {
         Set<Role> roles = getUserAppRoles(userId, appId);
+        if (CollectionUtils.isEmpty(roles)) {
+            return Collections.EMPTY_SET;
+        }
         Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
         return getRolePermissions(roleIds);
     }
