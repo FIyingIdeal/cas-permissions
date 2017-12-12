@@ -25,14 +25,14 @@ public class RemoteServiceTest {
     public void getRolesTest() {
         String username = "admin";
         String appKey = "appkey1";
-        logger.info("user app roles : " + remoteService.getRoles(username, appKey));
+        logger.info("user app roles : " + remoteService.getUserAppRoles(username, appKey));
     }
 
     @Test
     public void getPermissionsTest() {
         String username = "admin";
         String appKey = "appkey1";
-        logger.info("user app permissions : " + remoteService.getPermissions(username, appKey));
+        logger.info("user app permissions : " + remoteService.getUserAppPermissions(username, appKey));
     }
 
 }

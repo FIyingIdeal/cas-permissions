@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author yanchao
@@ -31,5 +32,9 @@ public class PermissionService {
 
     public List<Permission> getPermissionsByAppId(Long appId) {
         return permissionMapper.getPermissionsByAppId(appId);
+    }
+
+    public List<Permission> getPermissionsByIds(Set<Long> permissionIds) {
+        return permissionMapper.getPermissionsByIds(permissionIds);
     }
 }

@@ -2,6 +2,7 @@ package com.hiynn.caspermissions.server.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * @author yanchao
@@ -13,20 +14,22 @@ public class Resource implements Serializable {
     private Long appId;
     private String name;
     private String url;
-    private String roles;
-    private String permissions;
+    private String roleIds;
+    private Set<String> roles;
+    private String permissionIds;
+    private Set<String> permissions;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
     public Resource() {}
 
-    public Resource(Long appId, String name, String url, String roles, String permissions,
+    public Resource(Long appId, String name, String url, String roleIds, String permissionIds,
                     LocalDateTime gmtCreate, LocalDateTime gmtModified) {
         this.appId = appId;
         this.name = name;
         this.url = url;
-        this.roles = roles;
-        this.permissions = permissions;
+        this.roleIds = roleIds;
+        this.permissionIds = permissionIds;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
@@ -63,19 +66,35 @@ public class Resource implements Serializable {
         this.url = url;
     }
 
-    public String getRoles() {
+    public String getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(String roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    public String getPermissionIds() {
+        return permissionIds;
+    }
+
+    public void setPermissionIds(String permissionIds) {
+        this.permissionIds = permissionIds;
+    }
+
+    public Set<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 
-    public String getPermissions() {
+    public Set<String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(String permissions) {
+    public void setPermissions(Set<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -102,8 +121,10 @@ public class Resource implements Serializable {
                 ", appId=" + appId +
                 ", name='" + name + '\'' +
                 ", url='" + url + '\'' +
-                ", roles='" + roles + '\'' +
-                ", permissions='" + permissions + '\'' +
+                ", roleIds='" + roleIds + '\'' +
+                ", roles=" + roles +
+                ", permissionIds='" + permissionIds + '\'' +
+                ", permissions=" + permissions +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
                 '}';

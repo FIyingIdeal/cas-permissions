@@ -6,7 +6,7 @@ server:
     port: 9443
     keyStorePath: D:/hiynn.keystore
     keyStorePassword: 123456
-  description: cas-permissions-core
+  description: cas-permissionIds-core
 
 shiro:
   cas:

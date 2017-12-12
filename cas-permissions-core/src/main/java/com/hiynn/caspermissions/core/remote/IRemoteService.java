@@ -1,5 +1,6 @@
 package com.hiynn.caspermissions.core.remote;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -8,11 +9,13 @@ import java.util.Set;
  */
 public interface IRemoteService {
 
-    Set<String> getRoles(String username, String appKey);
+    Set<String> getUserAppRoles(String username, String appKey);
 
-    Set<String> getRoles(Long userId, String appKey);
+    Set<String> getUserAppRoles(Long userId, String appKey);
 
-    Set<String> getPermissions(String username, String appKey);
+    Set<String> getUserAppPermissions(String username, String appKey);
 
-    Set<String> getPermissions(Long userId, String appKey);
+    Set<String> getUserAppPermissions(Long userId, String appKey);
+
+    Map<String, String> getAppFilterChainDefinitionMap(String appKey);
 }

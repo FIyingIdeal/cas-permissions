@@ -6,9 +6,9 @@ server:
     port: 9997
     keyStorePath: D:/hiynn.keystore
     keyStorePassword: 123456
-  description: cas-permissions-client
+  description: cas-permissionIds-client
   service:
-    #cas-permissions-server部署地址 + /remoteService
+    #cas-permissionIds-server部署地址 + /remoteService
     remoteServiceUrl: http://192.168.3.20:8080/hiynn-cas-server/remoteService
     #需要在每一个系统里的配置文件中覆盖掉该配置，每一个系统的appKey都不一样
     # TODO 考虑提供一个可以自动生成appKey的接口
@@ -32,4 +32,6 @@ shiro:
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
   successUrl: /
-
+  filterChainDefinitions: |
+    /logout=logout
+    /callback=cas

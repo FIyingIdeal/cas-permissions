@@ -25,6 +25,13 @@ public interface RoleMapper {
             "gmt_create as gmtCreate, gmt_modified as gmtModified from t_role where id = #{roleId}"})
     Role getRoleById(Long roleId);
 
+    @Select({"<script>" +
+            "select id, app_id as appId, role, role_name as roleName, available, description, " +
+                "gmt_create as gmtCreate, gmt_modified as gmtModified from t_role where id in " +
+                    "<foreach item='item' index='index' collection='roleIds' open='(' separator=',' close=')'>#{item}</foreach>" +
+            "</script>"})
+    List<Role> getRolesByIds(@Param("roleIds") Set<Long> roleIds);
+
     @Select({"select id, app_id as appId, role, role_name as roleName, available, description, " +
             "gmt_create as gmtCreate, gmt_modified as gmtModified from t_role where app_id = #{appId}"})
     List<Role> getRolesByAppId(Long appId);

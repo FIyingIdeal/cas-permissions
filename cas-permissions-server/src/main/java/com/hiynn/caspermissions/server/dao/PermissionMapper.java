@@ -1,12 +1,10 @@
 package com.hiynn.caspermissions.server.dao;
 
 import com.hiynn.caspermissions.server.entity.Permission;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author yanchao
@@ -26,6 +24,13 @@ public interface PermissionMapper {
     @Select({"select id, app_id as appId, permission, permission_name as permissionName, available, description, " +
             "gmt_create as gmtCreate, gmt_modified as gmtModified from t_permission where id = #{permissionId}"})
     Permission getPermissionById(Long permissionId);
+
+    @Select({"<script>" +
+            "select id, app_id as appId, permission, permission_name as permissionName, available, description, " +
+                "gmt_create as gmtCreate, gmt_modified as gmtModified from t_permission where id in " +
+                    "<foreach item='item' index='index' collection='permissionIds' open='(' separator=',' close=')'>#{item}</foreach>" +
+            "</script>"})
+    List<Permission> getPermissionsByIds(@Param("permissionIds") Set<Long> permissionIds);
 
     @Select({"select id, app_id as appId, permission, permission_name as permissionName, available, description, " +
             "gmt_create as gmtCreate, gmt_modified as gmtModified from t_permission where app_id = #{appId}"})

@@ -7,7 +7,6 @@ import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
-import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.util.Map;
  * @date 2017-12-6 21:04:46
  * @see ShiroWebFilterConfiguration
  */
-//@Configuration
+@Configuration
 public class ShiroConfig extends AbstractShiroConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
@@ -37,6 +36,7 @@ public class ShiroConfig extends AbstractShiroConfig {
      */
     @Bean
     public Realm pac4jRealm() {
+        logger.info("realm配置开始...");
         ClientPac4jRealm realm = new ClientPac4jRealm();
         return realm;
     }
@@ -55,7 +55,7 @@ public class ShiroConfig extends AbstractShiroConfig {
      * 定义拦截器链
      * @return
      */
-    @Bean
+    /*@Bean
     protected ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
         filterChainDefinition.addPathDefinition("/logout", "logout");
@@ -63,7 +63,7 @@ public class ShiroConfig extends AbstractShiroConfig {
         filterChainDefinition.addPathDefinition("/callback", "cas");
         filterChainDefinition.addPathDefinition("/**", "anon");
         return filterChainDefinition;
-    }
+    }*/
 
     /**
      * shiro-spring-boot-web-starter中默认会注入一个简单的ShiroFilterFactoryBean实例
@@ -77,8 +77,8 @@ public class ShiroConfig extends AbstractShiroConfig {
      */
     @Bean
     protected ShiroFilterFactoryBean shiroFilterFactoryBean() {
+        logger.info("ShiroFilterFactoryBean配置开始...");
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
-
         filterFactoryBean.setSecurityManager(securityManager);
         filterFactoryBean.setLoginUrl(loginUrl);
         //filterFactoryBean.setSuccessUrl(successUrl);
@@ -87,14 +87,8 @@ public class ShiroConfig extends AbstractShiroConfig {
         /**
          * 注册FilterChainDefinitionMap，shiro 4.0提供了{@link DefaultShiroFilterChainDefinition}用来辅助设置该属性
          * TODO 但需要注意的是该辅助类中使用的是HashMap，可能会引发FilterChain的顺序问题。
-         *
-         * 出于灵活性考虑，可以将拦截器链的配置在配置文件中以字符串的形式设置，每一个拦截器链的设置以\n进行分隔，
-         * 然后调用{@link ShiroFilterFactoryBean#setFilterChainDefinitions(String)}方法，Shiro会自动将其进行解析。
-         *
-         * TODO 如果要做动态权限管理，那么拦截器链的定义应该是从数据库获取并动态拼接。
-         *
          */
-        filterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
+        //filterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
         return filterFactoryBean;
     }
 

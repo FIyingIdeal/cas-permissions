@@ -40,11 +40,15 @@ public class RoleService {
         return roleMapper.getRoleById(roleId);
     }
 
+    public List<Role> getRolesByIds(Set<Long> roleIds) {
+        return roleMapper.getRolesByIds(roleIds);
+    }
+
     public List<Role> getRolesByAppId(Long appId) {
         return roleMapper.getRolesByAppId(appId);
     }
 
-    public Set<String> getRolePermissions(Set<Long> roleIds) {
+    public Set<String> getRoleStringPermissions(Set<Long> roleIds) {
         return roleMapper.getRolePermissions(roleIds);
     }
 
@@ -71,7 +75,7 @@ public class RoleService {
             return Collections.EMPTY_SET;
         }
         Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
-        return getRolePermissions(roleIds);
+        return getRoleStringPermissions(roleIds);
     }
 
     private String getUserAppRoleCacheKey(Long userId, Long appId) {

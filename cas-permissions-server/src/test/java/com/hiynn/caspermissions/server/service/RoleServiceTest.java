@@ -47,6 +47,13 @@ public class RoleServiceTest {
     }
 
     @Test
+    public void getRolesByIds() {
+        List<Long> roleIds = Arrays.asList(5L, 6L, 7L);
+        List<Role> roles = roleService.getRolesByIds(new HashSet<>(roleIds));
+        logger.info("getRolesByIds : " + roles);
+    }
+
+    @Test
     public void getRolesByAppId() {
         Long appId = 1L;
         List<Role> roles = roleService.getRolesByAppId(appId);
@@ -56,7 +63,7 @@ public class RoleServiceTest {
     @Test
     public void getPermissions() {
         Set<Long> roleIds = new HashSet<>(Arrays.asList(1L,2L));
-        Set<String> permissions = roleService.getRolePermissions(roleIds);
+        Set<String> permissions = roleService.getRoleStringPermissions(roleIds);
         System.out.println(permissions);
     }
 }

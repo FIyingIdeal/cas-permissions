@@ -42,7 +42,7 @@ public class ResourceServiceTest {
 
     @Test
     public void getResourceById() {
-        Long id = 8L;
+        Long id = 9L;
         Resource resource = resourceService.getResourceById(id);
         logger.info("resource info : " + resource);
     }

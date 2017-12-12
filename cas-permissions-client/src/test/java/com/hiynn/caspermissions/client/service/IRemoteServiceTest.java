@@ -27,6 +27,6 @@ public class IRemoteServiceTest {
     public void getRoles() {
         String username = "admin";
         String appKey = "appkey1";
-        logger.info("user app roles : " + remoteService.getRoles(username, appKey));
+        logger.info("user app roles : " + remoteService.getUserAppRoles(username, appKey));
     }
 }

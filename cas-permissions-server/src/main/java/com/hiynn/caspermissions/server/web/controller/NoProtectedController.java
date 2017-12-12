@@ -27,6 +27,6 @@ public class NoProtectedController {
 
     @GetMapping(value = "/remote")
     public Object getRemote() {
-        return remoteService.getRoles("admin", "appkey1");
+        return remoteService.getUserAppRoles("admin", "appkey1");
     }
 }
