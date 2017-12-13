@@ -32,6 +32,12 @@ shiro:
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
   successUrl: /
+  #本地权限配置
   filterChainDefinitions: |
     /logout=logout
     /callback=cas
+  #是否从数据库加载动态权限
+  loadDBPermissionsEnabled: false
+  #当远程权限系统Server不可用是，是否允许忽略动态权限加载，默认不允许（false）。
+  #注意，如果设置为true，在远程Server不可用时，数据库中配置的应用权限将被忽略，可能对系统造成不可恢复的损坏
+  ignoreDBPermissionsEnabled: false

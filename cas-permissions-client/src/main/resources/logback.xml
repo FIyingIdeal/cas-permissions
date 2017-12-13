@@ -1,0 +1,20 @@
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>Hiynn CAS-PERMISSION-SYSTEM %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!--
+  <logger name="org.pac4j" level="DEBUG" />
+  <logger name="io.buji" level="DEBUG" />
+  <logger name="org.pac4j.core.engine" level="DEBUG" />
+  <logger name="org.apache.shiro" level="DEBUG" />
+  -->
+  <logger name="com.hiynn.caspermissions" level="DEBUG" />
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

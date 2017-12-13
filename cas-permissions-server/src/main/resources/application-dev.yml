@@ -7,6 +7,9 @@ server:
     keyStorePath: D:/hiynn.keystore
     keyStorePassword: 123456
   description: cas-permissionIds-server
+  service:
+    remoteServiceUrl:
+    appKey: cas-server
 
 shiro:
   cas:
@@ -27,6 +30,11 @@ shiro:
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
   successUrl: /
+  filterChainDefinitions: |
+    /logout=logout
+    /callback=cas
+  loadDBPermissionsEnabled: true
+  ignoreDBPermissionsEnabled: false
 
 spring:
   datasource:

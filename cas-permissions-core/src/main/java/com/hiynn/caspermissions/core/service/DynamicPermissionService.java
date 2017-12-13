@@ -1,4 +1,4 @@
-package com.hiynn.caspermissions.client.service;
+package com.hiynn.caspermissions.core.service;
 
 import com.hiynn.caspermissions.core.remote.IRemoteService;
 import org.apache.shiro.config.Ini;
@@ -11,13 +11,16 @@ import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.remoting.RemoteConnectFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,15 +35,19 @@ public class DynamicPermissionService {
 
     @Resource(name = "remoteService")
     private IRemoteService remoteService;
-
     @Autowired
     private AbstractShiroFilter shiroFilter;
 
-    @Value("${shiro.filterChainDefinitions}")
-    private String filterChainDefinitions;
-
     @Value("${server.service.appKey}")
     private String appKey;
+    @Value("${server.service.remoteServiceUrl}")
+    private String remoteServiceUrl;
+    @Value("${shiro.filterChainDefinitions}")
+    private String filterChainDefinitions;
+    @Value("${shiro.loadDBPermissionsEnabled}")
+    private boolean loadDBPermissionsEnabled;
+    @Value("${shiro.ignoreDBPermissionsEnabled}")
+    private boolean ignoreDBPermissionsEnabled;
 
     @PostConstruct
     public synchronized void init() {
@@ -51,8 +58,7 @@ public class DynamicPermissionService {
 
     public synchronized void reloadPermission() {
         Map<String, String> filterChainDefinitionMap = getFilterChainDefinitionMap();
-        //TODO 测试使用debug方式，配置logback进行日志测试
-        logger.info("获取到的权限：" + filterChainDefinitionMap);
+        logger.debug("已加载权限内容：" + filterChainDefinitionMap);
         DefaultFilterChainManager manager = (DefaultFilterChainManager) getFilterChainManager();
         manager.getFilterChains().clear();
         addToChain(manager, filterChainDefinitionMap);
@@ -78,20 +84,52 @@ public class DynamicPermissionService {
 
     protected Map<String, String> getFilterChainDefinitionMap() {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.putAll(remoteService.getAppFilterChainDefinitionMap(appKey));
-        if (StringUtils.hasText(filterChainDefinitions)) {
-            filterChainDefinitionMap.putAll(getDefinitionsMap());
+        boolean hasFilterChainDefinitions = StringUtils.hasText(filterChainDefinitions);
+        boolean hasPermissions = loadDBPermissionsEnabled || hasFilterChainDefinitions;
+        if (!hasPermissions) {
+            logger.warn("权限加载设置未被允许，该系统将不被进行权限保护！请查看相关设置：shiro.loadDBPermissionsEnabled" +
+                    "（从数据库加载权限，默认false） 与 shiro.filterChainDefinitions（权限定义，默认为空）");
+            return Collections.EMPTY_MAP;
+        }
+        if (loadDBPermissionsEnabled) {
+            filterChainDefinitionMap.putAll(getDBFilterChainDefinitionMap());
+        }
+        if (hasFilterChainDefinitions) {
+            filterChainDefinitionMap.putAll(getLocalDefinitionsMap());
         }
         return filterChainDefinitionMap;
     }
 
-    protected Map<String, String> getDefinitionsMap() {
+    protected Map<String, String> getDBFilterChainDefinitionMap() {
+        logger.info("开始加载数据库动态权限...");
+        Map<String, String> dbFilterChainDefinitionMap;
+        try {
+            dbFilterChainDefinitionMap = remoteService.getAppFilterChainDefinitionMap(appKey);
+        } catch (BeanCreationException | RemoteConnectFailureException e) {
+            dbFilterChainDefinitionMap = Collections.EMPTY_MAP;
+            if (ignoreDBPermissionsEnabled) {
+                logger.warn("数据库动态权限加载异常，请检查权限系统Server端状态或远程接口配置【server.service.remoteServiceUrl={}】" +
+                        "是否正确。系统将尝试以忽略动态权限加载【shiro.ignoreDBPermissionsEnabled=true】方式启动，" +
+                        "请了解该方式启动风险！！！", remoteServiceUrl);
+            } else {
+                logger.warn("数据库动态权限加载异常且动态权限加载不允许被忽略【shiro.ignoreDBPermissionsEnabled=false】，" +
+                        "请检查权限系统Server端状态或远程接口配置【server.service.remoteServiceUrl={}】是否正确。", remoteServiceUrl);
+                throw e;
+            }
+        }
+        logger.debug("数据库动态权限内容：{}", dbFilterChainDefinitionMap);
+        return dbFilterChainDefinitionMap;
+    }
+
+    protected Map<String, String> getLocalDefinitionsMap() {
+        logger.info("开始加载配置文件自定义权限...");
         Ini ini = new Ini();
         ini.load(filterChainDefinitions);
         Ini.Section section = ini.getSection(IniFilterChainResolverFactory.URLS);
         if (CollectionUtils.isEmpty(section)) {
             section = ini.getSection(Ini.DEFAULT_SECTION_NAME);
         }
+        logger.debug("配置文件自定义权限内容：{}", section);
         return section;
     }
 }

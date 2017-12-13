@@ -42,11 +42,6 @@ public abstract class AbstractShiroConfig {
     @Qualifier(value = "loginPageConfig")
     protected Config config;
 
-    @Bean(name = "subjectFactory")
-    public Pac4jSubjectFactory subjectFactory() {
-        return new Pac4jSubjectFactory();
-    }
-
     /**
      * 此处不要将Filter注册为Bean，通过{@link ShiroFilterFactoryBean#setFilters(Map)}来向Shiro中注入Filter
      * 如果使用@Bean的方式注册为了一个Bean，且同时被注册到了Shiro当中，那这个Bean会被Spring和Shiro两者管理，在shiro的Filter执行完毕以后
@@ -59,30 +54,25 @@ public abstract class AbstractShiroConfig {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
         casSecurityFilter.setClients("CasClient");
-        //casSecurityFilter.setClients("CasRestFormClient");
-        /*
         //设置了rest方式的将身份信息保存到session当中，但无法解决第二个系统不需要在请求中携带username和password即可登录的问题
-        RestSecurityLogin restSecurityLogin = new RestSecurityLogin();
-        restSecurityLogin.setSaveProfileInSession(true);
-        restSecurityLogin.setProfileManagerFactory(ShiroProfileManager::new);
-        casSecurityFilter.setSecurityLogic(restSecurityLogin);*/
+        //casSecurityFilter.setClients("CasRestFormClient");
+        //RestSecurityLogin restSecurityLogin = new RestSecurityLogin();
+        //restSecurityLogin.setSaveProfileInSession(true);
+        //restSecurityLogin.setProfileManagerFactory(ShiroProfileManager::new);
+        //casSecurityFilter.setSecurityLogic(restSecurityLogin);
         return casSecurityFilter;
     }
 
     /**
      * CallbackFilter用来替代shiro-cas中的CasFilter，该Filter做的事：
      * 验证ticket是否有效
-     * TODO 该Filter其他任务有待研究
      */
     protected CallbackFilter callbackFilter() {
         CallbackFilter callbackFilter = new CallbackFilter();
         callbackFilter.setConfig(config);
         callbackFilter.setMultiProfile(true);
-        /**
-         * 设置默认的callback跳转页面
-         * 默认情况下，当访问受保护的页面的时候，如果没有登录，会先保存请求路径到session中，然后跳转到登录页面，登录成功后会跳转回原始请求页面
-         * 如果从session中没有拿到对应的请求页面，默认会跳转到"/"，可以通过setDefaultUrl(String)更改默认跳转
-         */
+        //设置默认的callback跳转页面。默认情况下，当访问受保护的页面的时候，如果没有登录，会先保存请求路径到session中，然后跳转到登录页面，
+        //登录成功后会跳转回原始请求页面。如果从session中没有拿到对应的请求页面，默认会跳转到"/"，可以通过setDefaultUrl(String)更改默认跳转
         callbackFilter.setDefaultUrl(callbackFilterDefaultUrl);
         return callbackFilter;
     }
