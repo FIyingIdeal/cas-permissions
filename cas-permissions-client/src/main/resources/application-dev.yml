@@ -1,7 +1,8 @@
 server:
   schema: http
-  context-path: /hiynn-cas-client
+  domain:
   port: 8888
+  context-path: /hiynn-cas-client
   https:
     port: 9997
     keyStorePath: D:/hiynn.keystore
@@ -15,6 +16,10 @@ server:
     appKey: cas-client
 
 shiro:
+  #关闭shiro注解，当和spring整合的时候，如果使用了@Transactional的时候会应为AOP代理的问题而造成启动失败。即使设置使用CGLIB也不行
+  # TODO 待研究
+  annotations:
+    enabled: false
   cas:
     schema: http
     domain: 192.168.3.20
@@ -23,11 +28,11 @@ shiro:
     casServerUrlPrefix: ${shiro.cas.schema}://${shiro.cas.domain}:${shiro.cas.port}${shiro.cas.context-path}
     casServerLoginUrl: ${shiro.cas.casServerUrlPrefix}/login
     callbackUrlSuffix: /callback
-    callbackUrl: ${server.schema}://${shiro.cas.domain}:${server.port}${server.context-path}${shiro.cas.callbackUrlSuffix}
+    callbackUrl: ${server.schema}://${server.domain}:${server.port}${server.context-path}${shiro.cas.callbackUrlSuffix}
     #callbackUrl在身份验证完毕以后要跳转回原始请求页面（OriginallyRequestedUrl，保存到session中）
     #如果因未知因素导致未从session中拿到OriginallyRequestedUrl，则会跳转到defaultUrl，其值默认为“/”
-    callbackFilterDefaultUrl: ${server.schema}://${shiro.cas.domain}:${server.port}${server.context-path}/service/hello
-    logoutFilterDefaultUrl: ${server.schema}://${shiro.cas.domain}:${server.port}${server.context-path}/ajaxlogout
+    callbackFilterDefaultUrl: ${server.schema}://${server.domain}:${server.port}${server.context-path}/service/hello
+    logoutFilterDefaultUrl: ${server.schema}://${server.domain}:${server.port}${server.context-path}/ajaxlogout
 
   #为ShiroFilterFactoryBean设置loginUrl属性{@link AbstractShiroWebFilterConfiguration#loginUrl}
   loginUrl: ${shiro.cas.casServerLoginUrl}?service=${shiro.cas.callbackUrl}
@@ -36,6 +41,7 @@ shiro:
   filterChainDefinitions: |
     /logout=logout
     /callback=cas
+    /**=securityFilter
   #是否从数据库加载动态权限
   loadDBPermissionsEnabled: false
   #当远程权限系统Server不可用是，是否允许忽略动态权限加载，默认不允许（false）。
