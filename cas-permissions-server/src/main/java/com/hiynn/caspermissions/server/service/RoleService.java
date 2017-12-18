@@ -52,8 +52,13 @@ public class RoleService {
         return roleMapper.getRolePermissions(roleIds);
     }
 
+    public Map<String, Set<Role>> getUserAppRoleCache() {
+        return userAppRoleCache;
+    }
+
     public Set<Role> getUserAppRoles(Long userId, Long appId) {
-        Set<Role> roles = getUserAppRoleFromCache(userId, appId);
+        //TODO 缓存问题需要重新考虑，在退出时需要将用户缓存清理掉，缓存放在这里不太好清理。暂时屏蔽掉
+        /*Set<Role> roles = getUserAppRoleFromCache(userId, appId);
         if (CollectionUtils.isEmpty(roles)) {
             logger.info("从数据库中获取用户（{}）系统（{}）角色信息", userId, appId);
             roles = roleMapper.getUserAppRoles(userId, appId);
@@ -61,7 +66,8 @@ public class RoleService {
         } else {
             logger.info("从缓存中获取用户（{}）系统（{}）角色信息", userId, appId);
         }
-        return roles;
+        return roles;*/
+        return roleMapper.getUserAppRoles(userId, appId);
     }
 
     public Set<String> getUserAppStringRoles(Long userId, Long appId) {

@@ -9,7 +9,7 @@ server:
     keyStorePassword: 123456
   description: cas-permissionIds-server
   service:
-    remoteServiceUrl:
+    remoteServerServiceUrl:
     appKey: cas-server
 
 shiro:

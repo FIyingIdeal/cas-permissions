@@ -7,7 +7,7 @@ import java.util.Set;
  * @author yanchao
  * @datetime 2017-12-10 15:39:49
  */
-public interface IRemoteService {
+public interface IRemoteServerService {
 
     Set<String> getUserAppRoles(String username, String appKey);
 

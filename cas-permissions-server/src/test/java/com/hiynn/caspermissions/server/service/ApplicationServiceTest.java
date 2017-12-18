@@ -22,16 +22,16 @@ public class ApplicationServiceTest {
 
     @Test
     public void insertApplicationTest() {
-        Application application = new Application("appKey", "test", "test Desc", Boolean.TRUE, "/test",
-                LocalDateTime.now(), LocalDateTime.now());
+        Application application = new Application("appKey", "test", "test Desc", Boolean.TRUE, "http",
+                "192.168.3.20", 8080, "/test", LocalDateTime.now(), LocalDateTime.now());
         int addCount = applicationService.addApplication(application);
         System.out.println("Add " + addCount + " Application success!");
     }
 
     @Test
     public void updateApplicationTest() {
-        Application application = new Application(2L, "appKeyUpdate", "test", "test Desc", Boolean.TRUE, "/test",
-                LocalDateTime.now(), LocalDateTime.now());
+        Application application = new Application(2L, "appKeyUpdate", "test", "test Desc", Boolean.TRUE, "http",
+                "192.168.3.20", 8080, "/test", LocalDateTime.now(), LocalDateTime.now());
         int updateCount = applicationService.updateApplication(application);
         System.out.println("update " + updateCount + " Application success!");
     }

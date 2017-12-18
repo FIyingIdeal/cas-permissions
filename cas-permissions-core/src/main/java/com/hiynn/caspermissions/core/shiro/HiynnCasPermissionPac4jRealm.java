@@ -1,6 +1,6 @@
 package com.hiynn.caspermissions.core.shiro;
 
-import com.hiynn.caspermissions.core.remote.IRemoteService;
+import com.hiynn.caspermissions.core.remote.IRemoteServerService;
 import com.hiynn.caspermissions.core.util.CasPermissionUtils;
 import io.buji.pac4j.realm.Pac4jRealm;
 import org.apache.shiro.authc.AuthenticationException;
@@ -24,8 +24,8 @@ public class HiynnCasPermissionPac4jRealm extends Pac4jRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(HiynnCasPermissionPac4jRealm.class);
 
-    @Resource(name = "remoteService")
-    private IRemoteService remoteService;
+    @Resource(name = "remoteServerService")
+    private IRemoteServerService remoteServerService;
     @Value("${server.service.appKey}")
     private String appKey;
 
@@ -37,8 +37,8 @@ public class HiynnCasPermissionPac4jRealm extends Pac4jRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = CasPermissionUtils.getUsername(principals);
-        final Set<String> roles = remoteService.getUserAppRoles(username, appKey);
-        final Set<String> permissions = remoteService.getUserAppPermissions(username, appKey);
+        final Set<String> roles = remoteServerService.getUserAppRoles(username, appKey);
+        final Set<String> permissions = remoteServerService.getUserAppPermissions(username, appKey);
         logger.debug("用户【{}】在系统【{}】中的权限信息：roles={}, permissions={}", username, appKey, roles, permissions);
 
         final SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();

@@ -1,6 +1,6 @@
 package com.hiynn.caspermissions.server.service;
 
-import com.hiynn.caspermissions.core.remote.IRemoteService;
+import com.hiynn.caspermissions.core.remote.IRemoteServerService;
 import com.hiynn.caspermissions.server.entity.Resource;
 import com.hiynn.caspermissions.server.entity.User;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -19,9 +19,9 @@ import java.util.*;
  * @date 2017/12/10 15:39
  */
 @Service
-public class RemoteService implements IRemoteService {
+public class RemoteServerService implements IRemoteServerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RemoteService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RemoteServerService.class);
 
     public static final String ROLE_PATTERN_STRING = "roles[{0}]";
     public static final String PERMISSION_PATTERN_STRING = "perms[{0}]";

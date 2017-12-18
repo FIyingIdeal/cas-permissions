@@ -1,6 +1,6 @@
 package com.hiynn.caspermissions.core.service;
 
-import com.hiynn.caspermissions.core.remote.IRemoteService;
+import com.hiynn.caspermissions.core.remote.IRemoteServerService;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.web.config.IniFilterChainResolverFactory;
@@ -33,15 +33,15 @@ public class DynamicPermissionService {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicPermissionService.class);
 
-    @Resource(name = "remoteService")
-    private IRemoteService remoteService;
+    @Resource(name = "remoteServerService")
+    private IRemoteServerService remoteServerService;
     @Autowired
     private AbstractShiroFilter shiroFilter;
 
     @Value("${server.service.appKey}")
     private String appKey;
-    @Value("${server.service.remoteServiceUrl}")
-    private String remoteServiceUrl;
+    @Value("${server.service.remoteServerServiceUrl}")
+    private String remoteServerServiceUrl;
     @Value("${shiro.filterChainDefinitions}")
     private String filterChainDefinitions;
     @Value("${shiro.loadDBPermissionsEnabled}")
@@ -51,9 +51,9 @@ public class DynamicPermissionService {
 
     @PostConstruct
     public synchronized void init() {
-        logger.info("权限加载开始");
+        logger.info("系统【{}】初始化权限开始...", appKey);
         reloadPermission();
-        logger.info("权限加载结束");
+        logger.info("系统【{}】初始化权限结束...", appKey);
     }
 
     public synchronized void reloadPermission() {
@@ -104,16 +104,16 @@ public class DynamicPermissionService {
         logger.info("开始加载数据库动态权限...");
         Map<String, String> dbFilterChainDefinitionMap;
         try {
-            dbFilterChainDefinitionMap = remoteService.getAppFilterChainDefinitionMap(appKey);
+            dbFilterChainDefinitionMap = remoteServerService.getAppFilterChainDefinitionMap(appKey);
         } catch (BeanCreationException | RemoteConnectFailureException e) {
             dbFilterChainDefinitionMap = Collections.EMPTY_MAP;
             if (ignoreDBPermissionsEnabled) {
-                logger.warn("数据库动态权限加载异常，请检查权限系统Server端状态或远程接口配置【server.service.remoteServiceUrl={}】" +
+                logger.warn("数据库动态权限加载异常，请检查权限系统Server端状态或远程接口配置【server.service.remoteServerServiceUrl={}】" +
                         "是否正确。系统将尝试以忽略动态权限加载【shiro.ignoreDBPermissionsEnabled=true】方式启动，" +
-                        "请了解该方式启动风险！！！", remoteServiceUrl);
+                        "请了解该方式启动风险！！！", remoteServerServiceUrl);
             } else {
                 logger.warn("数据库动态权限加载异常且动态权限加载不允许被忽略【shiro.ignoreDBPermissionsEnabled=false】，" +
-                        "请检查权限系统Server端状态或远程接口配置【server.service.remoteServiceUrl={}】是否正确。", remoteServiceUrl);
+                        "请检查权限系统Server端状态或远程接口配置【server.service.remoteServerServiceUrl={}】是否正确。", remoteServerServiceUrl);
                 throw e;
             }
         }

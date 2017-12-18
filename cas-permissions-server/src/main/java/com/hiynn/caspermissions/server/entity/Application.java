@@ -13,31 +13,40 @@ public class Application implements Serializable {
     private String appKey;
     private String appName;
     private String appDesc;
-    private Boolean appStatus = Boolean.FALSE;
+    private Boolean appStatus = Boolean.TRUE;
+    private String appSchema;
+    private String appDomain;
+    private int appPort;
     private String appContextPath;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
     public Application() {}
 
-    public Application(String appKey, String appName, String appDesc, Boolean appStatus,
-                       String appContextPath, LocalDateTime gmtCreate, LocalDateTime gmtModified) {
+    public Application(String appKey, String appName, String appDesc, Boolean appStatus, String appSchema,
+                       String appDomain, int appPort, String appContextPath, LocalDateTime gmtCreate, LocalDateTime gmtModified) {
         this.appKey = appKey;
         this.appName = appName;
         this.appDesc = appDesc;
         this.appStatus = appStatus;
+        this.appSchema = appSchema;
+        this.appDomain = appDomain;
+        this.appPort = appPort;
         this.appContextPath = appContextPath;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
 
-    public Application(Long id, String appKey, String appName, String appDesc, Boolean appStatus,
-                       String appContextPath, LocalDateTime gmtCreate, LocalDateTime gmtModified) {
+    public Application(Long id, String appKey, String appName, String appDesc, Boolean appStatus, String appSchema,
+                       String appDomain, int appPort, String appContextPath, LocalDateTime gmtCreate, LocalDateTime gmtModified) {
         this.id = id;
         this.appKey = appKey;
         this.appName = appName;
         this.appDesc = appDesc;
         this.appStatus = appStatus;
+        this.appSchema = appSchema;
+        this.appDomain = appDomain;
+        this.appPort = appPort;
         this.appContextPath = appContextPath;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
@@ -83,6 +92,30 @@ public class Application implements Serializable {
         this.appStatus = appStatus;
     }
 
+    public String getAppSchema() {
+        return appSchema;
+    }
+
+    public void setAppSchema(String appSchema) {
+        this.appSchema = appSchema;
+    }
+
+    public String getAppDomain() {
+        return appDomain;
+    }
+
+    public void setAppDomain(String appDomain) {
+        this.appDomain = appDomain;
+    }
+
+    public int getAppPort() {
+        return appPort;
+    }
+
+    public void setAppPort(int appPort) {
+        this.appPort = appPort;
+    }
+
     public String getAppContextPath() {
         return appContextPath;
     }
@@ -115,6 +148,9 @@ public class Application implements Serializable {
                 ", appName='" + appName + '\'' +
                 ", appDesc='" + appDesc + '\'' +
                 ", appStatus=" + appStatus +
+                ", appSchema='" + appSchema + '\'' +
+                ", appDomain='" + appDomain + '\'' +
+                ", appPort=" + appPort +
                 ", appContextPath='" + appContextPath + '\'' +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +

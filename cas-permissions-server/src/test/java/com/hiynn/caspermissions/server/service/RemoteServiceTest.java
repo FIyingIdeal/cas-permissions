@@ -19,7 +19,7 @@ public class RemoteServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(RemoteServiceTest.class);
 
     @Autowired
-    private RemoteService remoteService;
+    private RemoteServerService remoteService;
 
     @Test
     public void getRolesTest() {

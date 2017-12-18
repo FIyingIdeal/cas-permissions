@@ -1,6 +1,6 @@
 package com.hiynn.caspermissions.client.service;
 
-import com.hiynn.caspermissions.core.remote.IRemoteService;
+import com.hiynn.caspermissions.core.remote.IRemoteServerService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,12 +16,12 @@ import javax.annotation.Resource;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class IRemoteServiceTest {
+public class IRemoteServerServiceTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(IRemoteServiceTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(IRemoteServerServiceTest.class);
 
     @Resource(name = "remoteService")
-    private IRemoteService remoteService;
+    private IRemoteServerService remoteService;
 
     @Test
     public void getRoles() {
