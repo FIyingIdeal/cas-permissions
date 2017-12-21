@@ -18,18 +18,20 @@ public class Resource implements Serializable {
     private Set<String> roles;
     private String permissionIds;
     private Set<String> permissions;
+    private int priority;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
     public Resource() {}
 
     public Resource(Long appId, String name, String url, String roleIds, String permissionIds,
-                    LocalDateTime gmtCreate, LocalDateTime gmtModified) {
+                    int priority, LocalDateTime gmtCreate, LocalDateTime gmtModified) {
         this.appId = appId;
         this.name = name;
         this.url = url;
         this.roleIds = roleIds;
         this.permissionIds = permissionIds;
+        this.priority = priority;
         this.gmtCreate = gmtCreate;
         this.gmtModified = gmtModified;
     }
@@ -98,6 +100,14 @@ public class Resource implements Serializable {
         this.permissions = permissions;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     public LocalDateTime getGmtCreate() {
         return gmtCreate;
     }
@@ -125,6 +135,7 @@ public class Resource implements Serializable {
                 ", roles=" + roles +
                 ", permissionIds='" + permissionIds + '\'' +
                 ", permissions=" + permissions +
+                ", priority=" + priority +
                 ", gmtCreate=" + gmtCreate +
                 ", gmtModified=" + gmtModified +
                 '}';

@@ -28,7 +28,7 @@ public class ResourceServiceTest {
     @Test
     public void insertResourceTest() {
         LocalDateTime now = LocalDateTime.now();
-        Resource resource = new Resource(1L, "testPermission", "/testPermission", "1,2", "2,3", now, now);
+        Resource resource = new Resource(4L, "client动态权限测试", "/clientUpdatePermission", "6", "", 0, now, now);
         int insertCount = resourceService.insertResource(resource);
         logger.info("insert " + insertCount + " resource(s) success!");
     }

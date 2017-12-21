@@ -5,6 +5,8 @@ import com.hiynn.caspermissions.server.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * @author yanchao
  * @date 2017/12/8 11:10
@@ -20,6 +22,7 @@ public class UserService {
      }
 
      public int updateUser(User user) {
+         user.setGmtModified(LocalDateTime.now());
          return userMapper.updateUser(user);
      }
 

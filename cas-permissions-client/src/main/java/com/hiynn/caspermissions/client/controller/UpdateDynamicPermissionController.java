@@ -33,7 +33,7 @@ public class UpdateDynamicPermissionController {
         }
         logger.info("系统【{}】动态权限更新开始...", appKey);
         permissionService.reloadPermission();
-        logger.info("系统【{}】动态权限更新开始...", appKey);
+        logger.info("系统【{}】动态权限更新完成...", appKey);
         return "权限更新完成";
     }
 }
