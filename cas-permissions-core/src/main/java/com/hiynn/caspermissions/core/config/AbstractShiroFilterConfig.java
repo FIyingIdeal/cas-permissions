@@ -24,13 +24,10 @@ import java.util.Map;
  * @author yanchao
  * @date 2017/12/6 18:21
  */
-public abstract class AbstractShiroConfig {
+public abstract class AbstractShiroFilterConfig {
 
     @Value("${shiro.loginUrl}")
     protected String loginUrl;
-
-    @Value("${shiro.successUrl}")
-    protected String successUrl;
 
     @Value("${shiro.cas.callbackFilterDefaultUrl}")
     protected String callbackFilterDefaultUrl;
@@ -47,19 +44,13 @@ public abstract class AbstractShiroConfig {
      * 如果使用@Bean的方式注册为了一个Bean，且同时被注册到了Shiro当中，那这个Bean会被Spring和Shiro两者管理，在shiro的Filter执行完毕以后
      * 这里的Filter还会在执行{@link org.apache.shiro.web.servlet.ProxiedFilterChain#doFilter(ServletRequest, ServletResponse)}
      * 中的{@code this.orig.doFilter(...)}（即执行非Shiro的Filter，当与Spring整合的时候会执行Spring的Filter）时执行
-     * 那同一个Filter就会执行多次，这并不是我们所期望的，且可能会出错...                困扰了整整一天...
+     * 那同一个Filter就会执行多次，这并不是我们所期望的，且可能会出错...
      * @return
      */
     protected SecurityFilter securityFilter() {
         SecurityFilter casSecurityFilter = new SecurityFilter();
         casSecurityFilter.setConfig(config);
         casSecurityFilter.setClients("CasClient");
-        //设置了rest方式的将身份信息保存到session当中，但无法解决第二个系统不需要在请求中携带username和password即可登录的问题
-        //casSecurityFilter.setClients("CasRestFormClient");
-        //RestSecurityLogin restSecurityLogin = new RestSecurityLogin();
-        //restSecurityLogin.setSaveProfileInSession(true);
-        //restSecurityLogin.setProfileManagerFactory(ShiroProfileManager::new);
-        //casSecurityFilter.setSecurityLogic(restSecurityLogin);
         return casSecurityFilter;
     }
 
@@ -112,7 +103,6 @@ public abstract class AbstractShiroConfig {
         Map<String, Filter> shiroFilter = new LinkedHashMap<String, Filter>();
         //SecurityFilter是pac4j-shiro提供的Filter，每一个受保护（需要登录权限）的URL都要通过该Filter进行验证
         shiroFilter.put("securityFilter", securityFilter());
-        //CallbackFilter是pac4j-shiro提供的Filter，控制身份验证后调回原请求
         shiroFilter.put("cas", callbackFilter());
         shiroFilter.put("cors", corsFilter());
         shiroFilter.put("logout", logoutFilter());

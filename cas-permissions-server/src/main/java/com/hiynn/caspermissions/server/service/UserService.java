@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author yanchao
@@ -36,5 +37,9 @@ public class UserService {
 
     public User getUserByUsername(String username) {
         return userMapper.getUserByUsername(username);
+    }
+
+    public Map<String, String> getUserPasswordAndSaltByUsername(String username) {
+         return userMapper.getUserPasswordAndSaltByUsername(username);
     }
 }

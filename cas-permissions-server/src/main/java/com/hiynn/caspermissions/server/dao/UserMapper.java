@@ -3,6 +3,7 @@ package com.hiynn.caspermissions.server.dao;
 import com.hiynn.caspermissions.server.entity.User;
 import org.apache.ibatis.annotations.*;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ public interface UserMapper {
             " #{email}, #{telephone}, #{birthday}, #{gmtCreate}, #{gmtModified})"})
     int insertUser(User user);
 
-    @Update({"update t_user set password = #{password}, locked = #{locked}, organization_id = #{organizationId}, " +
+    @Update({"update t_user set locked = #{locked}, organization_id = #{organizationId}, " +
             "email = #{email}, telephone = #{telephone}, birthday = #{birthday}, gmt_modified = #{gmtModified} where id = #{id}"})
     int updateUser(User user);
 
@@ -31,4 +32,7 @@ public interface UserMapper {
     @Select({"select id, username, locked, organization_id as organizationId, email, telephone, birthday, " +
             "gmt_create as gmtCreate, gmt_modified as gmtModified from t_user where username = #{username}"})
     User getUserByUsername(String username);
+
+    @Select({"select password, salt from t_user where username = #{username}"})
+    Map<String, String> getUserPasswordAndSaltByUsername(String username);
 }

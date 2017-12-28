@@ -1,23 +1,16 @@
 package com.hiynn.caspermissions.server.service;
 
 import com.hiynn.caspermissions.server.dao.ResourceMapper;
-import com.hiynn.caspermissions.server.entity.Application;
-import com.hiynn.caspermissions.server.entity.Permission;
-import com.hiynn.caspermissions.server.entity.Resource;
-import com.hiynn.caspermissions.server.entity.Role;
+import com.hiynn.caspermissions.server.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,30 +21,25 @@ import java.util.stream.Collectors;
 public class ResourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceService.class);
-    public static final String UPDATE_DYNAMIC_PERMISSIONS_URI = "/client/updateDynamicPermission";
 
     public static final String ROLE_PERMISSION_IDS_SEPARATOR = ",";
+
     @Autowired
     private ResourceMapper resourceMapper;
     @Autowired
     private RoleService roleService;
     @Autowired
     private PermissionService permissionService;
-    @Autowired
-    private ApplicationService applicationService;
-    @Autowired
-    private RestTemplate restTemplate;
 
     /**
-     * 新增单条Resource
+     * 新增单条Resource，该接口由{@link ResourceService#insertResources(List)}替代并对外提供服务
+     * 如果一次插入多条数据的话，需要将系统权限的刷新放置在insertResources(List)中
+     * 如果放置在insertResource()中的话，由于多次rest请求的顺序无法保证而可能导致系统权限异常
      * @param resource
      * @return
      */
-    public int insertResource(Resource resource) {
+    private int insertResource(Resource resource) {
          int insertCount = resourceMapper.insertResource(resource);
-         if (insertCount > 0) {
-             updateApplicationDynamicPermissions(resource.getAppId());
-         }
          return insertCount;
     }
 
@@ -60,6 +48,7 @@ public class ResourceService {
      * @param resources
      * @return
      */
+    @Transactional
     public int insertResources(List<Resource> resources) {
         int insertCount = 0;
         for (Resource resource : resources) {
@@ -73,21 +62,16 @@ public class ResourceService {
      * @param resource
      * @return
      */
+    @Transactional
     public int updateResource(Resource resource) {
         resource.setGmtModified(LocalDateTime.now());
         int updateCount = resourceMapper.updateResource(resource);
-        if (updateCount > 0) {
-            updateApplicationDynamicPermissions(resource.getAppId());
-        }
         return updateCount;
     }
 
+    @Transactional
     public int deleteResource(Long id) {
-        Resource resource = resourceMapper.getResourceById(id);
         int deleteCount = resourceMapper.deleteResource(id);
-        if (deleteCount > 0) {
-            updateApplicationDynamicPermissions(resource.getAppId());
-        }
         return deleteCount;
     }
 
@@ -147,45 +131,4 @@ public class ResourceService {
         return permissions.stream().map(Permission::getPermission).collect(Collectors.toSet());
     }
 
-    /**
-     * 动态权限刷新
-     * @param appId
-     */
-    private void updateApplicationDynamicPermissions(Long appId) {
-        Application application = applicationService.getApplicationById(appId);
-        String url = generateUpdateDynamicPermissionUrl(application);
-        logger.debug("更新系统权限地址：{}", url);
-        try {
-            String result = restTemplate.getForObject(url, String.class);
-            logger.info("权限更新结果：{} {}", url, result);
-        } catch (HttpClientErrorException e) {
-            logger.warn("系统权限刷新地址【{}】错误，请更正后重试！", url);
-        }
-    }
-
-    private String generateUpdateDynamicPermissionUrl(Application application) {
-        String appName = application.getAppName();
-        String schema = application.getAppSchema();
-        String domain = application.getAppDomain();
-        int port = application.getAppPort();
-        String contextPath = application.getAppContextPath();
-        if (!StringUtils.hasText(schema)) {
-            schema = "http";
-            logger.info("无法获取系统【{}】的Schema值，设置默认为{}", appName, schema);
-        }
-        if (!StringUtils.hasText(domain) || !StringUtils.hasText(contextPath)) {
-            logger.warn("无法获取系统【{}】Domain与ContextPath值，请检查配置是否正确！", appName);
-            //TODO 自定义异常
-            throw new NullPointerException("请求Domain（IP或域名）与ContextPath不允许为空【无ContextPath请指定为'/'】");
-        }
-        if (!contextPath.startsWith("/")) {
-            contextPath = "/" + contextPath;
-        }
-        StringBuilder builder = new StringBuilder();
-        builder.append(schema).append("://")
-                .append(domain).append(":")
-                .append(port).append(contextPath)
-                .append(UPDATE_DYNAMIC_PERMISSIONS_URI);
-        return builder.toString();
-    }
 }

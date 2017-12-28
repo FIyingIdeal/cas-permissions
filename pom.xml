@@ -61,6 +61,13 @@
 			<version>1.11</version>
 		</dependency>
 
+		<!--JWT支持，在Server通知Client进行系统权限更新的时候使用到-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

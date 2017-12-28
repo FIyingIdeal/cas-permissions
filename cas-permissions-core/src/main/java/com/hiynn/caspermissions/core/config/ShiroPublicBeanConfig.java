@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
  * @date 2017/12/13 17:28
  */
 @Configuration
-public class ShiroBeanConfig {
+public class ShiroPublicBeanConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShiroBeanConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShiroPublicBeanConfig.class);
 
     @Bean
     public Realm pac4jRealm() {

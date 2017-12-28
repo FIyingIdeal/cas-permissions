@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Map;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class UserServiceTest {
@@ -22,9 +24,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUserByUsername() {
+    public void getUserByUsernameTest() {
         String username = "admin";
         User user = userService.getUserByUsername(username);
         System.out.println(user);
+    }
+
+    @Test
+    public void getUserPasswordAndSaltByUsernameTest() {
+        String username = "admin";
+        Map<String, String> map = userService.getUserPasswordAndSaltByUsername(username);
+        System.out.println(map);
     }
 }

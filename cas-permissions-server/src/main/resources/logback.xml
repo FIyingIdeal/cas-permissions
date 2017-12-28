@@ -7,6 +7,7 @@
     </appender>
 
     <logger name="com.hiynn.caspermissions" level="DEBUG" />
+    <logger name="org.springframework.transaction" level="DEBUG" />
 
     <root level="WARN">
         <appender-ref ref="STDOUT" />

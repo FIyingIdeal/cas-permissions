@@ -4,6 +4,8 @@ import io.buji.pac4j.subject.Pac4jPrincipal;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author yanchao
@@ -11,13 +13,19 @@ import org.pac4j.core.profile.CommonProfile;
  */
 public class CasPermissionUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(CasPermissionUtils.class);
+
     public static CommonProfile getCommonProfile() {
-        final PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
-        if (principals != null) {
-            Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
-            if (principal != null) {
-                return principal.getProfile();
+        try {
+            final PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
+            if (principals != null) {
+                Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
+                if (principal != null) {
+                    return principal.getProfile();
+                }
             }
+        } catch (Exception e) {
+            logger.warn(e.getMessage());
         }
         return null;
     }

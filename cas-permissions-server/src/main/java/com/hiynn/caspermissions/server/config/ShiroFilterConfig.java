@@ -1,12 +1,9 @@
-package com.hiynn.caspermissions.client.config;
+package com.hiynn.caspermissions.server.config;
 
-import com.hiynn.caspermissions.core.config.AbstractShiroConfig;
-import com.hiynn.caspermissions.core.shiro.HiynnCasPermissionPac4jRealm;
+import com.hiynn.caspermissions.core.config.AbstractShiroFilterConfig;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.config.web.autoconfigure.ShiroWebFilterConfiguration;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,27 +15,16 @@ import java.util.Map;
 
 /**
  * @author yanchao
- * @date 2017-12-6 21:04:46
+ * @date 2017/11/21 11:29
  * @see ShiroWebFilterConfiguration
  */
 @Configuration
-public class ShiroConfig extends AbstractShiroConfig {
+public class ShiroFilterConfig extends AbstractShiroFilterConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShiroFilterConfig.class);
 
     @Autowired
     protected SecurityManager securityManager;
-
-    /**
-     * 使用buji-pac4j提供的Pac4jRealm进行身份认证
-     * @return
-     */
-    /*@Bean
-    public Realm pac4jRealm() {
-        logger.info("realm配置开始...");
-        HiynnCasPermissionPac4jRealm realm = new HiynnCasPermissionPac4jRealm();
-        return realm;
-    }*/
 
     /**
      * 注册自定义的Filter
@@ -62,31 +48,13 @@ public class ShiroConfig extends AbstractShiroConfig {
      */
     @Bean
     protected ShiroFilterFactoryBean shiroFilterFactoryBean() {
-        logger.info("ShiroFilterFactoryBean配置开始...");
+        logger.info("Server ShiroFilterFactoryBean配置开始...");
         ShiroFilterFactoryBean filterFactoryBean = new ShiroFilterFactoryBean();
         filterFactoryBean.setSecurityManager(securityManager);
         filterFactoryBean.setLoginUrl(loginUrl);
         filterFactoryBean.setFilters(registerUserFilter());
-        /**
-         * 注册FilterChainDefinitionMap，shiro 4.0提供了{@link DefaultShiroFilterChainDefinition}用来辅助设置该属性
-         * 使用动态权限以后，无需在此设置FilterChainDefinitionMap了
-         * filterFactoryBean.setFilterChainDefinitionMap(shiroFilterChainDefinition().getFilterChainMap());
-         */
+        //拦截器链的配置由动态权限部分控制
         return filterFactoryBean;
     }
-
-    /**
-     * 定义拦截器链，当使用动态权限的时候，无需再配置了
-     * @return
-     */
-//    @Bean
-//    protected ShiroFilterChainDefinition shiroFilterChainDefinition() {
-//        DefaultShiroFilterChainDefinition filterChainDefinition = new DefaultShiroFilterChainDefinition();
-//        filterChainDefinition.addPathDefinition("/logout", "logout");
-//        filterChainDefinition.addPathDefinition("/service/**", "cors, securityFilter");
-//        filterChainDefinition.addPathDefinition("/callback", "cas");
-//        filterChainDefinition.addPathDefinition("/**", "anon");
-//        return filterChainDefinition;
-//    }
 
 }
