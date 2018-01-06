@@ -51,10 +51,6 @@ public class Pac4jConfig {
          *
          */
         Clients clients = new Clients();
-        /**
-         * 如果在callbackUrl中不添加client_name请求参数，会导致ticket验证通不过 -.-!! 整整困扰了我一周时间...
-         * TODO 该问题应该是和获取TGT的时候所使用的url不一致导致的，如果不自己添加client_name或设置了defaultClient的话，不知道什么时候会添加这个请求参数，具体需要研究代码
-         */
         clients.setCallbackUrl(callbackUrl);
         clients.setClients(casClient);
         Config config = new Config(clients);
